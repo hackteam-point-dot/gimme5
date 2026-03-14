@@ -1,4 +1,4 @@
-import React, {memo, useState, useCallback} from 'react';
+import React, {memo} from 'react';
 import Table from '@jetbrains/ring-ui-built/components/table/table';
 import Selection from '@jetbrains/ring-ui-built/components/table/selection';
 import {type Column} from '@jetbrains/ring-ui-built/components/table/header-cell';
@@ -32,29 +32,34 @@ const columns: Column<UserRating>[] = [
     getValue: (item: UserRating) => item.xp.toLocaleString(),
     rightAlign: true,
   },
+  {
+    id: 'achievements',
+    title: 'Achievements',
+    getValue: (item: UserRating) => (
+      <div className="achievements">
+        {item.achievements.map(a => (
+          <div key={a.id} className="achievement-item" title={a.description}>
+            <img className="achievement-icon" src={a.imageUrl} alt={a.description} width={24} height={24}/>
+            {a.count > 1 && <span className="achievement-count">{a.count}</span>}
+          </div>
+        ))}
+      </div>
+    ),
+  },
 ];
 
-const AppComponent: React.FunctionComponent = () => {
-  const [selection, setSelection] = useState(
-    () => new Selection<UserRating>({data: mockUsers}),
-  );
+const selection = new Selection<UserRating>({data: mockUsers});
 
-  const handleSelectionChange = useCallback(
-    (newSelection: Selection<UserRating>) => setSelection(newSelection),
-    [],
-  );
-
-  return (
-    <div className="widget">
-      <Table
-        data={mockUsers}
-        columns={columns}
-        selection={selection}
-        onSelect={handleSelectionChange}
-        getItemKey={(item: UserRating) => item.id}
-      />
-    </div>
-  );
-};
+const AppComponent: React.FunctionComponent = () => (
+  <div className="widget">
+    <Table
+      data={mockUsers}
+      columns={columns}
+      selection={selection}
+      selectable={false}
+      getItemKey={(item: UserRating) => item.id}
+    />
+  </div>
+);
 
 export const App = memo(AppComponent);

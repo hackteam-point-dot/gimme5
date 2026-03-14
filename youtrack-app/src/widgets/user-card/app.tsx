@@ -13,7 +13,6 @@ async function fetchUserCardData(): Promise<UserCardData | null> {
         }
 
         const response = await fetch(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userLogin)}`);
-        console.log(response);
         if (!response.ok) {
             return null;
         }
