@@ -1,19 +1,58 @@
-import React, {memo, useCallback} from 'react';
-import Button from '@jetbrains/ring-ui-built/components/button/button';
+import React, {memo, useState, useCallback} from 'react';
+import Table from '@jetbrains/ring-ui-built/components/table/table';
+import Selection from '@jetbrains/ring-ui-built/components/table/selection';
+import {type Column} from '@jetbrains/ring-ui-built/components/table/header-cell';
 
-// Register widget in YouTrack. To learn more, see https://www.jetbrains.com/help/youtrack/devportal-apps/apps-host-api.html
-const host = await YTApp.register();
+import {type EmbeddableWidgetAPI} from '../../../@types/globals';
+import {type UserRating} from './types';
+import {mockUsers} from './mock-data';
+
+const host = await YTApp.register() as EmbeddableWidgetAPI;
+await host.setTitle('User Rating', '');
+
+const columns: Column<UserRating>[] = [
+  {
+    id: 'rank',
+    title: '#',
+    getValue: (item: UserRating) => mockUsers.indexOf(item) + 1,
+  },
+  {
+    id: 'username',
+    title: 'User',
+    getValue: (item: UserRating) => item.username,
+  },
+  {
+    id: 'team',
+    title: 'Team',
+    getValue: (item: UserRating) => item.team,
+  },
+  {
+    id: 'xp',
+    title: 'XP',
+    getValue: (item: UserRating) => item.xp.toLocaleString(),
+    rightAlign: true,
+  },
+];
 
 const AppComponent: React.FunctionComponent = () => {
-  const callBackend = useCallback(async () => {
-    const result = await host.fetchApp('backend/debug', {query: {test: '123'}});
-    // eslint-disable-next-line no-console
-    console.log('request result', result);
-  }, []);
+  const [selection, setSelection] = useState(
+    () => new Selection<UserRating>({data: mockUsers}),
+  );
+
+  const handleSelectionChange = useCallback(
+    (newSelection: Selection<UserRating>) => setSelection(newSelection),
+    [],
+  );
 
   return (
     <div className="widget">
-      <Button primary onClick={callBackend}>{'Make HTTP Request'}</Button>
+      <Table
+        data={mockUsers}
+        columns={columns}
+        selection={selection}
+        onSelect={handleSelectionChange}
+        getItemKey={(item: UserRating) => item.id}
+      />
     </div>
   );
 };
