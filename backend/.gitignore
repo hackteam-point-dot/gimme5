@@ -1,0 +1,20 @@
+﻿# JetBrains Rider / IntelliJ
+.idea/
+
+# .NET build output
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
