@@ -4,7 +4,7 @@ export const mockUserCardData: UserCardData | null = {
     xp: 1250,
     maxXp: 2000,
     level: 5,
-    balance: 500,
+    balance: 501,
     achievements: [
         {
             id: 1,

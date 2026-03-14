@@ -1,21 +1,19 @@
-import React, {memo} from 'react';
+import React, {memo, useState, useEffect} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
 import {type UserCardData} from './types';
-import {mockUserCardData} from './mock-data';
+import {type HostAPI} from '../../../@types/globals';
 
-await YTApp.register();
+const host = await YTApp.register() as HostAPI;
 
-//const host = await YTApp.register() as HostAPI;
-
-// async function fetchUserCardData(): Promise<UserCardData | null> {
-//     try {
-//         const userId = YTApp.entity?.id;
-//         if (!userId) {return null;}
-//         return await host.fetchApp<UserCardData>(`backend/users/${userId}/card`);
-//     } catch {
-//         return null;
-//     }
-// }
+async function fetchUserCardData(): Promise<UserCardData | null> {
+    try {
+        const userId = YTApp.entity?.id;
+        if (!userId) {return null;}
+        return await host.fetchApp<UserCardData>(`backend/users/${userId}/card`);
+    } catch {
+        return null;
+    }
+}
 
 interface UserCardProps {
     data: UserCardData;
@@ -53,28 +51,23 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
 );
 
 const AppComponent: React.FunctionComponent = () => {
-    if (mockUserCardData) {
-        return <UserCard data={mockUserCardData}/>;
-    }
-    return <div>The user is not participating in GiveMeFive challenges yet 😿</div>;
-};
+  const [data, setData] = useState<UserCardData | null>(null);
+  const [loading, setLoading] = useState(true);
 
-// const AppComponent: React.FunctionComponent = () => {
-//   const [data, setData] = useState<UserCardData | null>(null);
-//
-//   useEffect(() => {
-//     fetchUserCardData().then(result => {
-//       if (result) {
-//         setData(result);
-//       } else {
-//         host.closeWidget();
-//       }
-//     });
-//   }, []);
-//
-//   if (!data) return null;
-//
-//   return <UserCard data={data}/>;
-// };
+  useEffect(() => {
+    fetchUserCardData().then(result => {
+      setData(result);
+      setLoading(false);
+    });
+  }, []);
+
+  if (loading) return null;
+
+  if (!data) {
+    return <div>The user is not participating in GiveMeFive challenges yet</div>;
+  }
+
+  return <UserCard data={data}/>;
+};
 
 export const App = memo(AppComponent);
