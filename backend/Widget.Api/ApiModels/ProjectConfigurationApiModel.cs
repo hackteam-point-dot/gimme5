@@ -7,4 +7,8 @@ public record ProjectConfigurationApiModel(
     IssueWeightType IssueWeightType,
     int DefaultIssueWeight,
     int IssueUnitWeight,
-    string IssueWeightFieldName);
+    int IssueResolveReward,
+    int BugResolveReward,
+    string IssueWeightFieldName,
+    Dictionary<Widget.Api.Application.Priority, decimal> PriorityMultipliers,
+    Dictionary<Widget.Api.Domain.Achievement, int> AchievementRewards);

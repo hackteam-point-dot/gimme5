@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Widget.Api.ApiModels;
+using Widget.Api.Application;
 using Widget.Api.Repositories;
 
 namespace Widget.Api.Controllers;
@@ -23,6 +24,29 @@ public class ProjectConfigurationController(ProjectConfigurationRepository repos
             config.IssueWeightType,
             config.DefaultIssueWeight,
             config.IssueUnitWeight,
-            config.IssueWeightFieldName));
+            config.IssueResolveReward,
+            config.BugResolveReward,
+            config.IssueWeightFieldName,
+            config.PriorityMultipliers,
+            config.AchievementRewards));
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateConfiguration([FromBody] ProjectConfigurationApiModel model)
+    {
+        await repository.UpsertAsync(new ProjectConfiguration
+        {
+            ProjectId = model.ProjectId,
+            IssueWeightType = model.IssueWeightType,
+            DefaultIssueWeight = model.DefaultIssueWeight,
+            IssueUnitWeight = model.IssueUnitWeight,
+            IssueResolveReward = model.IssueResolveReward,
+            BugResolveReward = model.BugResolveReward,
+            IssueWeightFieldName = model.IssueWeightFieldName,
+            PriorityMultipliers = model.PriorityMultipliers,
+            AchievementRewards = model.AchievementRewards
+        });
+
+        return NoContent();
     }
 }

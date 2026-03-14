@@ -1,5 +1,5 @@
 using Widget.Api.Repositories;
-using Widget.Api.Application;
+using Widget.Api.Domain;
 
 namespace Widget.Api.Application;
 
@@ -22,7 +22,25 @@ public class ProjectConfigurationSeedService(IServiceProvider serviceProvider) :
                 IssueWeightType = IssueWeightType.StoryPoints,
                 DefaultIssueWeight = 10,
                 IssueUnitWeight = 10,
-                IssueWeightFieldName = "Story points"
+                IssueWeightFieldName = "Story points",
+                BugResolveReward = 70,
+                IssueResolveReward = 50,
+                PriorityMultipliers = new Dictionary<Priority, decimal>
+                {
+                    { Priority.Minor, 1.0m },
+                    { Priority.Normal, 1.5m },
+                    { Priority.Major, 2.0m },
+                    { Priority.Critical, 3.0m }
+                },
+                AchievementRewards = new()
+                {
+                    [Achievement.TaskBuilder] = 50,
+                    [Achievement.OnFire] = 200,
+                    [Achievement.DeadlineHero] = 200,
+                    [Achievement.BugHunter] = 100,
+                    [Achievement.NightOwl] = 20,
+                }
+                
             }, cancellationToken);
         }
     }

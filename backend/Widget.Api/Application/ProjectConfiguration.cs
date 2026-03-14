@@ -1,8 +1,10 @@
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Bson.Serialization.Options;
+using Widget.Api.Domain;
 
 namespace Widget.Api.Application;
 
+[BsonIgnoreExtraElements]
 public class ProjectConfiguration
 {
     [BsonId]
@@ -10,11 +12,27 @@ public class ProjectConfiguration
     public IssueWeightType IssueWeightType { get; init; }
     public int DefaultIssueWeight { get; init; }
     public int IssueUnitWeight { get; init; }
+    public int IssueResolveReward { get; init; }
+    public int BugResolveReward { get; init; }
     public string IssueWeightFieldName { get; init; } = "Story Points";
+    
+    [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfDocuments)]
+    public Dictionary<Priority, decimal> PriorityMultipliers { get; init; } = new();
+    
+    [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfDocuments)]
+    public Dictionary<Achievement, int> AchievementRewards { get; init; } = new();
 }
 
 public enum IssueWeightType
 {
     StoryPoints,
     Time
+}
+
+public enum Priority
+{
+    Minor,
+    Normal,
+    Major,
+    Critical
 }
