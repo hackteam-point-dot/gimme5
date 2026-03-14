@@ -11,7 +11,6 @@ public class ProjectConfiguration
     [BsonId]
     public string ProjectId { get; init; } = string.Empty;
     public IssueWeightType IssueWeightType { get; init; }
-    public int DefaultIssueWeight { get; init; }
     public int IssueUnitWeight { get; init; }
     public int IssueResolveReward { get; init; }
     public int BugResolveReward { get; init; }
@@ -26,6 +25,7 @@ public class ProjectConfiguration
 
 public enum IssueWeightType
 {
+    None,
     StoryPoints,
     Time
 }

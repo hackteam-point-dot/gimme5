@@ -6,7 +6,6 @@ namespace Widget.Api.ApiModels;
 public record ProjectConfigurationApiModel(
     string ProjectId,
     IssueWeightType IssueWeightType,
-    int DefaultIssueWeight,
     int IssueUnitWeight,
     int IssueResolveReward,
     int BugResolveReward,

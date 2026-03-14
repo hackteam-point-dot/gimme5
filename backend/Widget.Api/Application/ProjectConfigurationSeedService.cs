@@ -21,7 +21,6 @@ public class ProjectConfigurationSeedService(IServiceProvider serviceProvider) :
             {
                 ProjectId = ProjectId,
                 IssueWeightType = IssueWeightType.StoryPoints,
-                DefaultIssueWeight = 10,
                 IssueUnitWeight = 10,
                 IssueWeightFieldName = "Story points",
                 BugResolveReward = 70,

@@ -10,7 +10,7 @@ public class XpService(
 {
     public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo);
 
-    public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel)
+    public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel, ulong achievementReward)
     {
         if (eventApiModel.Event is EventType.ISSUE_RESOLVED or EventType.BUG_RESOLVED &&
             eventApiModel.Children?.Length is null or 0)
@@ -24,7 +24,12 @@ public class XpService(
 
             user ??= new UserRepository.UserItem(eventApiModel.Login, 0, 0, DateTime.UtcNow);
             
-            var taskXp = cfg.DefaultIssueWeight;
+            var taskXp = 0;
+            
+            if (eventApiModel.Event == EventType.ISSUE_RESOLVED)
+                taskXp += cfg.IssueResolveReward;
+            else if (eventApiModel.Event == EventType.BUG_RESOLVED)
+                taskXp += cfg.BugResolveReward; 
 
             if (cfg.IssueWeightType == IssueWeightType.StoryPoints &&
                 int.TryParse(eventApiModel.StoryPoints, out var storyPoints))
@@ -41,10 +46,7 @@ public class XpService(
             if (cfg.PriorityMultipliers.TryGetValue(eventApiModel.IssuePriority, out var priorityMultiplier))
                 taskXp = (int)(priorityMultiplier * taskXp);
             
-            if (eventApiModel.Event == EventType.ISSUE_RESOLVED)
-                taskXp += cfg.IssueResolveReward;
-            else if (eventApiModel.Event == EventType.BUG_RESOLVED)
-                taskXp += cfg.BugResolveReward;   
+            taskXp += (int)achievementReward;
             
             var newXp = user.Xp + (ulong)taskXp;
 

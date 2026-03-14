@@ -22,7 +22,7 @@ public class EventsController(
         if (task?.ExpAwarded == true)
             return Ok(null);
         
-        var actualExp = await xpService.TryAddXp(args);
+        var actualExp = await xpService.TryAddXp(args, 0);
         
         if (task != null)
             await achievementService.CalculateAchievements(args.Login);

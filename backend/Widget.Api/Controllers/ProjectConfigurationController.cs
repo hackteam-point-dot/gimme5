@@ -22,7 +22,6 @@ public class ProjectConfigurationController(ProjectConfigurationRepository repos
         return Ok(new ProjectConfigurationApiModel(
             config.ProjectId,
             config.IssueWeightType,
-            config.DefaultIssueWeight,
             config.IssueUnitWeight,
             config.IssueResolveReward,
             config.BugResolveReward,
@@ -38,7 +37,6 @@ public class ProjectConfigurationController(ProjectConfigurationRepository repos
         {
             ProjectId = model.ProjectId,
             IssueWeightType = model.IssueWeightType,
-            DefaultIssueWeight = model.DefaultIssueWeight,
             IssueUnitWeight = model.IssueUnitWeight,
             IssueResolveReward = model.IssueResolveReward,
             BugResolveReward = model.BugResolveReward,
