@@ -10,5 +10,4 @@ public record UserCardApiModel(
     ulong Xp,
     ulong MaxXp,
     int Level,
-    ulong Balance,
     UserAchievementApiModel[] Achievements);

@@ -1,48 +1,49 @@
 namespace Widget.Api.Application;
 
-public record LevelInfo(int Level, ulong MinXp, ulong MaxXp, ulong Reward);
+public record LevelInfo(int Level, ulong MinXp, ulong MaxXp);
 
 public class LevelCalculator
 {
-    private static readonly List<(ulong MinXp, ulong Reward)> FixedLevels = new()
+    private static readonly List<ulong> FixedLevels = new()
     {
-        (0, 0),          // Level 1: 0 - 500
-        (500, 100),      // Level 2: 500 - 1200
-        (1200, 150),     // Level 3: 1200 - 2200
-        (2200, 200),     // Level 4: 2200 - 3500
-        (3500, 250),     // Level 5: 3500 - 5200
-        (5200, 300),     // Level 6: 5200 - 7400
-        (7400, 400),     // Level 7: 7400 - 10200
-        (10200, 500),    // Level 8: 10200 - 13700
-        (13700, 700),    // Level 9: 13700 - 18000
-        (18000, 1000)    // Level 10 (Legend): 18000+
+        0,          // Level 1: 0 - 500
+        500,      // Level 2: 500 - 1200
+        1200,     // Level 3: 1200 - 2200
+        2200,     // Level 4: 2200 - 3500
+        3500,     // Level 5: 3500 - 5200
+        5200,     // Level 6: 5200 - 7400
+        7400,     // Level 7: 7400 - 10200
+        10200,    // Level 8: 10200 - 13700
+        13700,    // Level 9: 13700 - 18000
+        18000// Level 10 (Legend): 18000+
     };
 
     private const ulong LegendStep = 5000;
 
+    public LevelInfo FirstLevelInfo => new (1, 0, FixedLevels[1]);
+    
     public LevelInfo GetLevelInfo(ulong totalXp)
     {
-        if (totalXp < FixedLevels[^1].MinXp)
+        if (totalXp < FixedLevels[^1])
         {
             for (int i = 0; i < FixedLevels.Count - 1; i++)
             {
-                if (totalXp >= FixedLevels[i].MinXp && totalXp < FixedLevels[i + 1].MinXp)
+                if (totalXp >= FixedLevels[i] && totalXp < FixedLevels[i + 1])
                 {
                     return new LevelInfo(
                         i + 1,
-                        FixedLevels[i].MinXp,
-                        FixedLevels[i + 1].MinXp,
-                        FixedLevels[i].Reward);
+                        FixedLevels[i],
+                        FixedLevels[i + 1]);
                 }
             }
         }
 
         // Legend levels (10+)
-        ulong legendXp = totalXp - FixedLevels[^1].MinXp;
+        ulong legendXp = totalXp - FixedLevels[^1];
         int extraLevels = (int)(legendXp / LegendStep);
         int currentLevel = 10 + extraLevels;
         
-        ulong currentLevelMinXp = FixedLevels[^1].MinXp + (ulong)extraLevels * LegendStep;
+        ulong currentLevelMinXp = FixedLevels[^1] + (ulong)extraLevels * LegendStep;
         ulong nextLevelMaxXp = currentLevelMinXp + LegendStep;
         
         // Reward for reaching Level 10 is 1000.
@@ -54,7 +55,6 @@ public class LevelCalculator
         return new LevelInfo(
             currentLevel,
             currentLevelMinXp,
-            nextLevelMaxXp,
-            1000);
+            nextLevelMaxXp);
     }
 }
