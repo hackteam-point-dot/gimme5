@@ -1,10 +1,9 @@
 ﻿using Widget.Api.ApiModels;
-using Widget.Api.Domain;
 using Widget.Api.Repositories;
 
 namespace Widget.Api.Domain.Targets;
 
-public class BugHunterTarget : ITarget
+public class BugHunterTarget() : ITarget
 {
     public Achievement Achievement => Achievement.BugHunter;
 
