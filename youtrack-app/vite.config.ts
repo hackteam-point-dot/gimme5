@@ -58,6 +58,7 @@ export default defineConfig({
                 // List every widget entry point here
                 userRating: resolve(__dirname, 'src/widgets/user-dashboard/index.html'),
                 userCard: resolve(__dirname, 'src/widgets/user-card/index.html'),
+                teamRating: resolve(__dirname, 'src/widgets/team-dashboard/index.html'),
             }
         }
     }
