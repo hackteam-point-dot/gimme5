@@ -9,7 +9,22 @@
   },
   "icon": "icon.svg",
   "widgets": [
-
+    {
+      "key": "gimme5_user_rating",
+      "name": "GiveMeFive user rating dashboard",
+      "indexPath": "user-dashboard/index.html",
+      "extensionPoint": "DASHBOARD_WIDGET",
+      "iconPath": "user-dashboard/widget-icon.svg",
+      "description": "Shows user rating in GiveMeFive system"
+    },
+    {
+      "key": "gimme5_user_card",
+      "name": "GiveMeFive user card",
+      "indexPath": "user-card/index.html",
+      "extensionPoint": "DASHBOARD_WIDGET",
+      "iconPath": "user-card/widget-icon.svg",
+      "description": "Shows user card in GiveMeFive system"
+    },
     {
       "key": "gimme5",
       "name": "Gimme5",
