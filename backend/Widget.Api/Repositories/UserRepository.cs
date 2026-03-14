@@ -23,14 +23,6 @@ public class UserRepository(IMongoDatabase database)
 
     private readonly IMongoCollection<UserProjectItem> _userProjectsCollection =
         database.GetCollection<UserProjectItem>("UserProjects");
-
-    // public async Task<UserItem> CreateAsync(string userId, string projectId, ulong balance, ulong xp,
-    //     CancellationToken ct = default)
-    // {
-    //     var document = new UserItem(userId, xp, DateTime.UtcNow);
-    //     await _usersCollection.InsertOneAsync(document, cancellationToken: ct);
-    //     return document;
-    // }
     
     public async Task<UserItem?> GetUserById(string userId, CancellationToken ct = default)
     {
@@ -58,7 +50,7 @@ public class UserRepository(IMongoDatabase database)
             update,
             new FindOneAndUpdateOptions<UserItem>
             {
-                IsUpsert = false,
+                IsUpsert = true,
                 ReturnDocument = ReturnDocument.After
             },
             cancellationToken: ct);
