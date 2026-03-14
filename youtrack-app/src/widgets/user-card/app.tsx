@@ -7,15 +7,15 @@ import {mockUserCardData} from './mock-data';
 await YTApp.register();
 
 interface UserCardProps {
-  data: UserCardData;
+    data: UserCardData;
 }
 
 const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
   <div className="widget">
-    <div className="stats-row">
-      <span className="stat">XP: {data.xp}</span>
-      <span className="stat">Balance: {data.balance}</span>
-    </div>
+    {/*<div className="stats-row">*/}
+    {/*  <span className="stat">XP: {data.xp}</span>*/}
+    {/*  <span className="stat">Balance: {data.balance}</span>*/}
+    {/*</div>*/}
     <div className="level-row">
       <div className="level-header">
         <span className="level-label">Level {data.level}</span>
@@ -24,6 +24,7 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
       <ProgressBar value={data.xp} max={data.maxXp}/>
     </div>
     <div className="achievements-row">
+      <span className="stat">Balance: {data.balance}</span>
       {data.achievements.map(achievement => (
         <img
           key={achievement.id}
@@ -34,7 +35,7 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
           width={24}
           height={24}
         />
-      ))}
+            ))}
     </div>
   </div>
 );
