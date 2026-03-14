@@ -7,13 +7,13 @@ await YTApp.register();
 
 async function fetchUserCardData(): Promise<UserCardData | null> {
     try {
-        const userId = YTApp.entity?.id;
-        if (!userId) {
+        const userLogin = YTApp.entity?.login;
+        if (!userLogin) {
             return null;
         }
         console.log(YTApp.entity);
-        console.log(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userId)}`);
-        const response = await fetch(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userId)}`);
+        console.log(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userLogin)}`);
+        const response = await fetch(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userLogin)}`);
         if (!response.ok) {
             return null;
         }
