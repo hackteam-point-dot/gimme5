@@ -50,7 +50,7 @@ export default defineConfig({
       input: {
         // List every widget entry point here
         gimme5: resolve(__dirname, 'src/widgets/gimme5/index.html'),
-
+        userRating: resolve(__dirname, 'src/widgets/user-dashboard/index.html'),
       }
     }
   }
