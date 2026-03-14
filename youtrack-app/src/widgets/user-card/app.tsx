@@ -53,7 +53,7 @@ const AppComponent: React.FunctionComponent = () => {
     if (mockUserCardData) {
         return <UserCard data={mockUserCardData}/>;
     }
-    return null;
+    return <div>The user is not participating in GiveMeFive challenges yet 😿</div>;
 };
 
 // const AppComponent: React.FunctionComponent = () => {

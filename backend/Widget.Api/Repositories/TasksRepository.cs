@@ -11,6 +11,7 @@ public class TasksRepository(IMongoDatabase database)
         string ProjectId,
         EventType Status,
         string? ResolverId,
+        bool ExpAwarded,
         ImmutableList<string> SubTaskIds);
 
     private readonly IMongoCollection<TaskItem> _collection =
@@ -24,12 +25,34 @@ public class TasksRepository(IMongoDatabase database)
 
     public async Task<TaskItem?> CreateOrUpdateAsync(TaskItem item, CancellationToken ct = default)
     {
-        return await _collection.FindOneAndReplaceAsync(
+        var update = Builders<TaskItem>.Update
+            .Set(t => t.ProjectId, item.ProjectId)
+            .Set(t => t.Status, item.Status)
+            .Set(t => t.ResolverId, item.ResolverId)
+            .Set(t => t.SubTaskIds, item.SubTaskIds)
+            .SetOnInsert(t => t.ExpAwarded, item.ExpAwarded);
+
+        return await _collection.FindOneAndUpdateAsync(
             t => t.Id == item.Id,
-            item,
-            new FindOneAndReplaceOptions<TaskItem>
+            update,
+            new FindOneAndUpdateOptions<TaskItem>
             {
                 IsUpsert = true,
+                ReturnDocument = ReturnDocument.After
+            },
+            cancellationToken: ct);
+    }
+
+    public async Task<TaskItem?> SetExpAwardedAsync(string id, bool expAwarded, CancellationToken ct = default)
+    {
+        var update = Builders<TaskItem>.Update
+            .Set(t => t.ExpAwarded, expAwarded);
+
+        return await _collection.FindOneAndUpdateAsync(
+            t => t.Id == id,
+            update,
+            new FindOneAndUpdateOptions<TaskItem>
+            {
                 ReturnDocument = ReturnDocument.After
             },
             cancellationToken: ct);
