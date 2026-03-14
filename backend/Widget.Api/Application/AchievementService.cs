@@ -5,7 +5,7 @@ namespace Widget.Api.Application;
 
 public class AchievementService
 {
-    public Task TryAddAchievement(TasksRepository.TaskItem item)
+    public Task CalculateAchievements()
     {
         return Task.CompletedTask;
     }

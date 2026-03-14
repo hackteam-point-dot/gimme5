@@ -26,7 +26,7 @@ public class EventsController(
         var actualExp = await xpService.TryAddXp(args);
         
         if (task != null)
-            await achievementService.TryAddAchievement(task);
+            await achievementService.CalculateAchievements();
 
         if (actualExp.ExpChange == 0) 
             return Ok(null);
