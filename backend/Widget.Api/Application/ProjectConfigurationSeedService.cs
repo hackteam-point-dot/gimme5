@@ -1,3 +1,4 @@
+using Widget.Api.ApiModels;
 using Widget.Api.Repositories;
 using Widget.Api.Domain;
 

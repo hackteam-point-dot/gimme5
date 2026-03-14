@@ -38,6 +38,14 @@ public class XpService(
                     taskXp = (int)timeSpan.TotalHours * cfg.IssueUnitWeight;
             }
 
+            if (cfg.PriorityMultipliers.TryGetValue(eventApiModel.IssuePriority, out var priorityMultiplier))
+                taskXp = (int)(priorityMultiplier * taskXp);
+            
+            if (eventApiModel.Event == EventType.ISSUE_RESOLVED)
+                taskXp += cfg.IssueResolveReward;
+            else if (eventApiModel.Event == EventType.BUG_RESOLVED)
+                taskXp += cfg.BugResolveReward;   
+            
             var newXp = user.Xp + (ulong)taskXp;
 
             int? levelUpgraded = null;
