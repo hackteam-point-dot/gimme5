@@ -6,6 +6,8 @@ export interface Achievement {
 
 export interface UserCardData {
   xp: number;
+  maxXp: number;
+  level: number;
   balance: number;
   achievements: Achievement[];
 }
