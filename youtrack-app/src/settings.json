@@ -4,7 +4,14 @@
     "title": "Gamify",
     "description": "",
     "properties": {
+        "backendBaseUrl": {
+            "type": "string",
+            "title": "Backend API Base URL",
+            "description": "Base URL for the GiveMeFive backend API",
+            "default": "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net"
+        }
     },
-    "required":[
+    "required": [
+        "backendBaseUrl"
     ]
 }
