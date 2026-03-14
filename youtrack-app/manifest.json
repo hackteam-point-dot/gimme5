@@ -3,6 +3,7 @@
   "title": "GiveMeFive",
   "description": "Gamification plugin",
   "$schema": "https://json.schemastore.org/youtrack-app.json",
+  "baseUrl": "https://3e94-81-21-35-241.ngrok-free.app",
   "vendor": {
     "name": "",
     "url": "https://www.jetbrains.com/"
