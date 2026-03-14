@@ -17,7 +17,7 @@ public class EventsController(
     public async Task<ActionResult<PostEventApiModel>> PostEvent([FromBody] PostEventApiModel args, [FromQuery] string projectId)
     {
         await tasksRepository.CreateOrUpdateAsync(new TasksRepository.TaskItem(args.IssueId, args.ProjectKey,
-            args.StoryPoints, EventType.ISSUE_RESOLVED, args.Login, args.Children.ToImmutableList()));
+            EventType.ISSUE_RESOLVED, args.Login, args.Children.ToImmutableList()));
         
         var actualExp = await xpService.TryAddXp(args);
         await achievementService.TryAddAchievement(args);

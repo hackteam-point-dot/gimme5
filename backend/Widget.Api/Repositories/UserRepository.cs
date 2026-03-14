@@ -10,8 +10,7 @@ public class UserRepository(IMongoDatabase database)
         ulong Balance,
         DateTime DateCreated);
 
-    private readonly IMongoCollection<UserItem> _collection =
-        database.GetCollection<UserItem>("Users");
+    private readonly IMongoCollection<UserItem> _collection = database.GetCollection<UserItem>("Users");
 
     public async Task<UserItem> CreateAsync(string userId, string projectId, ulong balance, CancellationToken ct = default)
     {

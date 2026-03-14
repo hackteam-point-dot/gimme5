@@ -9,7 +9,6 @@ public class TasksRepository(IMongoDatabase database)
     public record TaskItem(
         string Id,
         string ProjectId,
-        uint? StoryPoints,
         EventType Status,
         string? ResolverId,
         ImmutableList<string> SubTaskIds);
