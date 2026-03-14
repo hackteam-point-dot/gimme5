@@ -29,8 +29,8 @@ public class EventsController(
         if (task?.ExpAwarded == true)
             return Ok(null);
         
-        var actualExp = await xpService.TryAddXp(args);
         var achievementResult = await achievementService.CalculateAchievements(args, args.Login);
+        var actualExp = await xpService.TryAddXp(args, achievementResult.Exp);
 
         if (actualExp.ExpChange == 0)
             return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo,
