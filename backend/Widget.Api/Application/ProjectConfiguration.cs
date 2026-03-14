@@ -1,10 +1,11 @@
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Widget.Api.Application;
 
 public class ProjectConfiguration
 {
-    public ObjectId Id { get; init; }
+    [BsonId]
     public string ProjectId { get; init; } = string.Empty;
     public IssueWeightType IssueWeightType { get; init; }
     public int DefaultIssueWeight { get; init; }

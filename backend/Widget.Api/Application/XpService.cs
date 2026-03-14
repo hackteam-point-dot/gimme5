@@ -3,22 +3,25 @@ using Widget.Api.Repositories;
 
 namespace Widget.Api.Application;
 
-public class XpService(ProjectConfigurationRepository projectConfigurationRepository, UserRepository userRepository)
+public class XpService(
+    ProjectConfigurationRepository projectConfigurationRepository,
+    UserRepository userRepository,
+    LevelCalculator levelCalculator)
 {
-    public record XpAddResult(ulong Exp, ulong ExpChange);
-    
+    public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo);
+
     public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel)
     {
         if (eventApiModel.Event == EventType.ISSUE_RESOLVED && eventApiModel.Children?.Length is null or 0)
         {
             var cfg = await projectConfigurationRepository.GetByProjectIdAsync(eventApiModel.ProjectKey);
-            
-            var user = await userRepository.GetUserById(eventApiModel.Login);
-            
-            if (cfg is null || user is null)
-                return new (0, 0);
 
-            int taskXp = cfg.DefaultIssueWeight;
+            var user = await userRepository.GetUserById(eventApiModel.Login);
+
+            if (cfg is null || user is null)
+                return new(0, 0, null);
+
+            var taskXp = cfg.DefaultIssueWeight;
 
             if (cfg.IssueWeightType == IssueWeightType.StoryPoints &&
                 int.TryParse(eventApiModel.StoryPoints, out var storyPoints))
@@ -31,11 +34,19 @@ public class XpService(ProjectConfigurationRepository projectConfigurationReposi
                 if (timeSpan.TotalHours > 0)
                     taskXp = (int)timeSpan.TotalHours * cfg.IssueUnitWeight;
             }
+            
+            var newXp = user.Xp + (ulong)taskXp;
 
-            return new(user.Xp, (ulong)taskXp);
+            int? levelUpgraded = null;
+            var actualLevenInfo = levelCalculator.GetLevelInfo(newXp);
+            if (actualLevenInfo.Level > user.Level)
+                levelUpgraded = actualLevenInfo.Level;
+            await userRepository.SetXpAndLevel(user.Id, newXp, actualLevenInfo.Level);
+
+            return new(user.Xp, (ulong)taskXp, levelUpgraded);
         }
-        
-        return new (0, 0);
+
+        return new(0, 0, null);
     }
 
     private TimeSpan ParseTimeSpan(string input)

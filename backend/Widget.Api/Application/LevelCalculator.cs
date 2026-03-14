@@ -2,7 +2,7 @@ namespace Widget.Api.Application;
 
 public record LevelInfo(int Level, ulong MinXp, ulong MaxXp, ulong Reward);
 
-public class LevelService
+public class LevelCalculator
 {
     private static readonly List<(ulong MinXp, ulong Reward)> FixedLevels = new()
     {
@@ -56,42 +56,5 @@ public class LevelService
             currentLevelMinXp,
             nextLevelMaxXp,
             1000);
-    }
-
-    public List<ulong> GetRewardsForXpRange(ulong oldXp, ulong newXp)
-    {
-        var rewards = new List<ulong>();
-        
-        // Check fixed levels 2 to 10
-        for (int i = 1; i < FixedLevels.Count; i++)
-        {
-            if (oldXp < FixedLevels[i].MinXp && newXp >= FixedLevels[i].MinXp)
-            {
-                rewards.Add(FixedLevels[i].Reward);
-            }
-        }
-
-        // Check legend levels (> 10)
-        if (newXp >= FixedLevels[^1].MinXp + LegendStep)
-        {
-            ulong firstLegendThreshold = FixedLevels[^1].MinXp + LegendStep;
-            
-            // If we started below level 10, start from first legend threshold
-            ulong startXp = Math.Max(oldXp, FixedLevels[^1].MinXp);
-            
-            // Calculate how many legend thresholds we crossed
-            // Example: oldXp = 18000 (Level 10), newXp = 23000 (Level 11). Threshold 23000 crossed.
-            // Example: oldXp = 18000, newXp = 28000 (Level 12). Thresholds 23000, 28000 crossed.
-            
-            ulong currentThreshold = ((startXp - FixedLevels[^1].MinXp) / LegendStep + 1) * LegendStep + FixedLevels[^1].MinXp;
-            
-            while (newXp >= currentThreshold)
-            {
-                rewards.Add(1000); // Reward for legend levels
-                currentThreshold += LegendStep;
-            }
-        }
-
-        return rewards;
     }
 }
