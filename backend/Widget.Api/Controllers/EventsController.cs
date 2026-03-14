@@ -15,7 +15,7 @@ public class EventsController(
     XpService xpService) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<PostEventApiModel?>> PostEvent([FromBody] PostEventApiModel args, [FromQuery] string projectId)
+    public async Task<ActionResult<PostEventApiModel?>> PostEvent([FromBody] PostEventApiModel args)
     {
         var task = await tasksRepository.CreateOrUpdateAsync(new TasksRepository.TaskItem(args.IssueId, args.ProjectKey,
             EventType.ISSUE_RESOLVED, args.Login, false, args.Children?.ToImmutableList() ?? []));
@@ -24,7 +24,9 @@ public class EventsController(
             return Ok(null);
         
         var actualExp = await xpService.TryAddXp(args);
-        await achievementService.TryAddAchievement(args);
+        
+        if (task != null)
+            await achievementService.TryAddAchievement(task);
 
         if (actualExp.ExpChange == 0) 
             return Ok(null);
@@ -33,6 +35,5 @@ public class EventsController(
         await userRepository.IncrementXpAsync(args.Login, actualExp.ExpChange);
             
         return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange));
-
     }
 }

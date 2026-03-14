@@ -19,4 +19,8 @@
       </Content>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="Domain\UserMetrics.cs" />
+    </ItemGroup>
+
 </Project>

@@ -12,15 +12,30 @@ public class UserAchievementRepository(IMongoDatabase database)
         [property: BsonRepresentation(BsonType.ObjectId)]
         string UserId,
         Achievement Achievement,
+        int Level,
         DateTime DateCreated);
 
     private readonly IMongoCollection<UserAchievementItem> _collection =
         database.GetCollection<UserAchievementItem>("UserAchievements");
 
-    public async Task<UserAchievementItem> CreateAsync(string userId, Achievement achievement, CancellationToken ct = default)
+    public async Task<UserAchievementItem> CreateOrUpdateAsync(string userId, Achievement achievement, CancellationToken cancellationToken = default)
     {
-        var document = new UserAchievementItem(userId, achievement, DateTime.UtcNow);
-        await _collection.InsertOneAsync(document, cancellationToken: ct);
-        return document;
+        var filter = Builders<UserAchievementItem>.Filter.And(
+            Builders<UserAchievementItem>.Filter.Eq(x => x.UserId, userId),
+            Builders<UserAchievementItem>.Filter.Eq(x => x.Achievement, achievement));
+
+        var update = Builders<UserAchievementItem>.Update
+            .Inc(x => x.Level, 1)
+            .SetOnInsert(x => x.UserId, userId)
+            .SetOnInsert(x => x.Achievement, achievement)
+            .SetOnInsert(x => x.DateCreated, DateTime.UtcNow);
+
+        var options = new FindOneAndUpdateOptions<UserAchievementItem>
+        {
+            IsUpsert = true,
+            ReturnDocument = ReturnDocument.After
+        };
+
+        return await _collection.FindOneAndUpdateAsync(filter, update, options, cancellationToken);
     }
 }

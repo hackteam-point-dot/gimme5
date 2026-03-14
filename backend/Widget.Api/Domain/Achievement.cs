@@ -2,5 +2,10 @@
 
 public enum Achievement
 {
-    BugSlayer
+    TaskBuilder,
+    DeadlineHero,
+    OnFire,
+    BugHunter,
+    NightOwl,
+    EarlyBird
 }
