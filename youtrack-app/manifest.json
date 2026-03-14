@@ -1,0 +1,22 @@
+{
+  "name": "app",
+  "title": "GiveMeFive",
+  "description": "Gamification plugin",
+  "$schema": "https://json.schemastore.org/youtrack-app.json",
+  "vendor": {
+    "name": "",
+    "url": "https://www.jetbrains.com/"
+  },
+  "icon": "icon.svg",
+  "widgets": [
+
+    {
+      "key": "gimme5",
+      "name": "Gimme5",
+      "indexPath": "gimme5/index.html",
+      "extensionPoint": "DASHBOARD_WIDGET",
+      "iconPath": "gimme5/widget-icon.svg",
+      "description": ""
+    }
+  ]
+}
