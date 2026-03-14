@@ -41,14 +41,14 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
         {data.achievements.map(achievement => (
           <div key={achievement.id} className="achievement-item" title={achievement.description}>
             <img
-              className="achievement-icon"
+              className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
               src={achievement.imageUrl}
               alt={achievement.description}
               width={32}
               height={32}
             />
             {achievement.count > 1 && (
-            <span className="achievement-count">{achievement.count}</span>
+            <span className="achievement-count">x{achievement.count}</span>
                         )}
           </div>
                 ))}
