@@ -1,16 +1,20 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson.Serialization.Attributes;
+using MongoDB.Driver;
 
 namespace Widget.Api.Repositories;
 
 public class UserRepository(IMongoDatabase database)
 {
+    [BsonIgnoreExtraElements]
     public record UserItem(
         string Id,
         ulong Xp,
+        int Level,
         DateTime DateCreated);
 
     public record UserProjectKey(string UserId, string ProjectId);
 
+    [BsonIgnoreExtraElements]
     public record UserProjectItem(
         UserProjectKey Id,
         ulong Balance);
@@ -42,10 +46,12 @@ public class UserRepository(IMongoDatabase database)
             .ToListAsync(cancellationToken: ct);
     }
 
-    public async Task<UserItem?> IncrementXpAsync(string userId, ulong amount, CancellationToken ct = default)
+    public async Task<UserItem?> SetXpAndLevel(string userId, ulong xp, int level, CancellationToken ct = default)
     {
         var filter = Builders<UserItem>.Filter.Eq(u => u.Id, userId);
-        var update = Builders<UserItem>.Update.Inc(u => u.Xp, amount);
+        var update = Builders<UserItem>.Update
+            .Set(u => u.Xp, xp)
+            .Set(u => u.Level, level);
 
         return await _usersCollection.FindOneAndUpdateAsync(
             filter,

@@ -41,7 +41,7 @@ builder.Services.AddScoped<ProjectConfigurationRepository>();
 builder.Services.AddHostedService<ProjectConfigurationSeedService>();
 builder.Services.AddTransient<AchievementService>();
 builder.Services.AddTransient<XpService>();
-builder.Services.AddTransient<LevelService>();
+builder.Services.AddTransient<LevelCalculator>();
 
 builder.Services.AddTransient<ITarget, TaskBuilderTarget>();
 builder.Services.AddTransient<ITarget, DeadlineHeroTarget>();

@@ -11,7 +11,6 @@ namespace Widget.Api.Controllers;
 public class EventsController(
     TasksRepository tasksRepository, 
     AchievementService achievementService,
-    UserRepository userRepository,
     XpService xpService) : ControllerBase
 {
     [HttpPost]
@@ -32,8 +31,7 @@ public class EventsController(
             return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange));
         
         await tasksRepository.SetExpAwardedAsync(args.IssueId, true);
-        await userRepository.IncrementXpAsync(args.Login, actualExp.ExpChange);
             
-        return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange));
+        return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo));
     }
 }
