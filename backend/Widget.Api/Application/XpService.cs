@@ -12,15 +12,18 @@ public class XpService(
 
     public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel)
     {
-        if (eventApiModel.Event == EventType.ISSUE_RESOLVED && eventApiModel.Children?.Length is null or 0)
+        if (eventApiModel.Event is EventType.ISSUE_RESOLVED or EventType.BUG_RESOLVED &&
+            eventApiModel.Children?.Length is null or 0)
         {
             var cfg = await projectConfigurationRepository.GetByProjectIdAsync(eventApiModel.ProjectKey);
 
             var user = await userRepository.GetUserById(eventApiModel.Login);
 
-            if (cfg is null || user is null)
+            if (cfg is null )
                 return new(0, 0, null);
 
+            user ??= new UserRepository.UserItem(eventApiModel.Login, 0, 0, DateTime.UtcNow);
+            
             var taskXp = cfg.DefaultIssueWeight;
 
             if (cfg.IssueWeightType == IssueWeightType.StoryPoints &&
@@ -34,7 +37,7 @@ public class XpService(
                 if (timeSpan.TotalHours > 0)
                     taskXp = (int)timeSpan.TotalHours * cfg.IssueUnitWeight;
             }
-            
+
             var newXp = user.Xp + (ulong)taskXp;
 
             int? levelUpgraded = null;
