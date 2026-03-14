@@ -1,15 +1,23 @@
-import React, {memo, useState, useEffect} from 'react';
+import React, {memo, useEffect, useState} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
 import {type UserCardData} from './types';
-import {type HostAPI} from '../../../@types/globals';
+import {API_BASE_URL} from './config';
 
-const host = await YTApp.register() as HostAPI;
+await YTApp.register();
 
 async function fetchUserCardData(): Promise<UserCardData | null> {
     try {
         const userId = YTApp.entity?.id;
-        if (!userId) {return null;}
-        return await host.fetchApp<UserCardData>(`backend/users/${userId}/card`);
+        if (!userId) {
+            return null;
+        }
+        console.log(YTApp.entity);
+        console.log(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userId)}`);
+        const response = await fetch(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userId)}`);
+        if (!response.ok) {
+            return null;
+        }
+        return await response.json() as UserCardData;
     } catch {
         return null;
     }
@@ -51,23 +59,25 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
 );
 
 const AppComponent: React.FunctionComponent = () => {
-  const [data, setData] = useState<UserCardData | null>(null);
-  const [loading, setLoading] = useState(true);
+    const [data, setData] = useState<UserCardData | null>(null);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchUserCardData().then(result => {
-      setData(result);
-      setLoading(false);
-    });
-  }, []);
+    useEffect(() => {
+        fetchUserCardData().then(result => {
+            setData(result);
+            setLoading(false);
+        });
+    }, []);
 
-  if (loading) return null;
+    if (loading) {
+        return null;
+    }
 
-  if (!data) {
-    return <div>The user is not participating in GiveMeFive challenges yet</div>;
-  }
+    if (!data) {
+        return <div>The user is not participating in GiveMeFive challenges yet</div>;
+    }
 
-  return <UserCard data={data}/>;
+    return <UserCard data={data}/>;
 };
 
 export const App = memo(AppComponent);
