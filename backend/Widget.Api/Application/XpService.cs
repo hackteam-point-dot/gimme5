@@ -3,13 +3,15 @@ using Widget.Api.Repositories;
 
 namespace Widget.Api.Application;
 
-public class XpService(TasksRepository tasksRepository)
+public class XpService(ProjectConfigurationRepository projectConfigurationRepository)
 {
     public async Task TryAddXp(PostEventApiModel eventApiModel)
     {
         if (eventApiModel.Event == EventType.ISSUE_RESOLVED && eventApiModel.Children?.Length is null or 0)
         {
-            var taskXp = eventApiModel.StoryPoints * 10;
+            // var taskXp = eventApiModel.StoryPoints 
+            //     
+            //     eventApiModel.StoryPoints * 10;
             
         }
     }

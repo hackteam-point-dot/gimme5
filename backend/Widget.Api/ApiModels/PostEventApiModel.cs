@@ -8,4 +8,4 @@ public record PostEventApiModel(
     string ProjectName, 
     string[]? Children, 
     Priority IssuePriority, 
-    uint StoryPoints);
+    string? StoryPoints);
