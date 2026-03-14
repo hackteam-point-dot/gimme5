@@ -2,6 +2,7 @@ using System.Text.Json.Serialization;
 using MongoDB.Driver;
 using Widget.Api.Repositories;
 using Widget.Api.Application;
+using Widget.Api.Domain.Targets;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,13 @@ builder.Services.AddHostedService<ProjectConfigurationSeedService>();
 builder.Services.AddTransient<AchievementService>();
 builder.Services.AddTransient<XpService>();
 builder.Services.AddTransient<LevelService>();
+
+builder.Services.AddTransient<ITarget, TaskBuilderTarget>();
+builder.Services.AddTransient<ITarget, DeadlineHeroTarget>();
+builder.Services.AddTransient<ITarget, OnFireTarget>();
+builder.Services.AddTransient<ITarget, BugHunterTarget>();
+builder.Services.AddTransient<ITarget, NightOwlTarget>();
+builder.Services.AddTransient<ITarget, EarlyBirdTarget>();
 
 var app = builder.Build();
 

@@ -1,9 +1,13 @@
-﻿namespace Widget.Api.Domain.Targets;
+﻿using Widget.Api.Repositories;
+
+namespace Widget.Api.Domain.Targets;
 
 public class DeadlineHeroTarget : ITarget
 {
-    public bool IsAchieved()
+    public Achievement Achievement => Achievement.DeadlineHero;
+
+    public bool IsAchieved(string userId, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
-        throw new NotImplementedException();
+        return true;
     }
 }

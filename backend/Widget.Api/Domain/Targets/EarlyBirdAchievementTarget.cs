@@ -3,9 +3,9 @@ using Widget.Api.Repositories;
 
 namespace Widget.Api.Domain.Targets;
 
-public class TaskBuilderTarget : ITarget
+public class EarlyBirdTarget : ITarget
 {
-    public Achievement Achievement => Achievement.TaskBuilder;
+    public Achievement Achievement => Achievement.EarlyBird;
 
     public bool IsAchieved(string userId, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
