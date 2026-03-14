@@ -6,6 +6,6 @@ public record PostEventApiModel(
     string Login, 
     string ProjectKey, 
     string ProjectName, 
-    string[] Children, 
+    string[]? Children, 
     Priority IssuePriority, 
-    uint StoryPoints);
+    string? StoryPoints);
