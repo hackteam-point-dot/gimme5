@@ -39,6 +39,7 @@ builder.Services.AddScoped<TasksRepository>();
 builder.Services.AddScoped<ProjectConfigurationRepository>();
 builder.Services.AddHostedService<ProjectConfigurationSeedService>();
 builder.Services.AddTransient<AchievementService>();
+builder.Services.AddTransient<XpService>();
 
 var app = builder.Build();
 
