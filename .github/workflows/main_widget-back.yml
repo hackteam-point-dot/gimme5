@@ -52,4 +52,4 @@ jobs:
           app-name: 'widget-back'
           slot-name: 'Production'
           package: .
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_5E121D9B83604E40B6F70BAFD280F980 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_05439B823FE648C5B149EA5C6458B55C }}
