@@ -1,15 +1,17 @@
 import React, {memo, useState, useEffect} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
 import {type UserCardData} from './types';
-import {type HostAPI} from '../../../@types/globals';
+import {API_BASE_URL} from './config';
 
-const host = await YTApp.register() as HostAPI;
+await YTApp.register();
 
 async function fetchUserCardData(): Promise<UserCardData | null> {
     try {
         const userId = YTApp.entity?.id;
         if (!userId) {return null;}
-        return await host.fetchApp<UserCardData>(`backend/users/${userId}/card`);
+        const response = await fetch(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userId)}`);
+        if (!response.ok) {return null;}
+        return await response.json() as UserCardData;
     } catch {
         return null;
     }
