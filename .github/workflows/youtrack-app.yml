@@ -34,4 +34,4 @@ jobs:
         run: npm run pack
 
       - name: Upload to YouTrack
-        run: npm run upload -- --host ${{ secrets.YOUTRACK_HOST }} --token ${{ secrets.YOUTRACK_TOKEN }}
+        run: npm run upload -- --host ${{ vars.YOUTRACK_HOST }} --token ${{ secrets.YOUTRACK_TOKEN }}
