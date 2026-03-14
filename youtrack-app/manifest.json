@@ -20,7 +20,7 @@
     {
       "key": "gimme5_user_card",
       "name": "Honor board",
-      "indexPath": "https://3e94-81-21-35-241.ngrok-free.app/widgets/user-card/index.html",
+      "indexPath": "user-card/index.html",
       "extensionPoint": "USER_CARD",
       "iconPath": "user-card/widget-icon.svg",
       "description": "Shows user card in GiveMeFive system"
