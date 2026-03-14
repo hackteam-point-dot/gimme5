@@ -3,7 +3,6 @@
   "title": "GiveMeFive",
   "description": "Gamification plugin",
   "$schema": "https://json.schemastore.org/youtrack-app.json",
-  "baseUrl": "https://3e94-81-21-35-241.ngrok-free.app",
   "vendor": {
     "name": "",
     "url": "https://www.jetbrains.com/"
@@ -21,7 +20,7 @@
     {
       "key": "gimme5_user_card",
       "name": "Honor board",
-      "indexPath": "user-card/index.html",
+      "indexPath": "https://3e94-81-21-35-241.ngrok-free.app/widgets/user-card/index.html",
       "extensionPoint": "USER_CARD",
       "iconPath": "user-card/widget-icon.svg",
       "description": "Shows user card in GiveMeFive system"
