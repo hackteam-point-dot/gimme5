@@ -30,4 +30,11 @@ public class UserRepository(IMongoDatabase database)
             .Limit(limit)
             .ToListAsync(cancellationToken: ct);
     }
+
+    public async Task IncrementBalanceAsync(string userId, string projectId, ulong amount, CancellationToken ct = default)
+    {
+        var filter = Builders<UserItem>.Filter.Eq(u => u.Id, new Key(userId, projectId));
+        var update = Builders<UserItem>.Update.Inc(u => u.Balance, amount);
+        await _collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true }, cancellationToken: ct);
+    }
 }

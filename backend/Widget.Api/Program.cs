@@ -34,6 +34,7 @@ builder.Services.AddSingleton(sp =>
 
 builder.Services.AddScoped<UserAchievementRepository>();
 builder.Services.AddScoped<UserRepository>();
+builder.Services.AddScoped<TasksRepository>();
 
 var app = builder.Build();
 

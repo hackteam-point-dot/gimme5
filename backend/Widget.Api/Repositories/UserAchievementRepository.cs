@@ -12,15 +12,23 @@ public class UserAchievementRepository(IMongoDatabase database)
         [property: BsonRepresentation(BsonType.ObjectId)]
         string UserId,
         Achievement Achievement,
+        ulong Xp,
         DateTime DateCreated);
 
     private readonly IMongoCollection<UserAchievementItem> _collection =
         database.GetCollection<UserAchievementItem>("UserAchievements");
 
-    public async Task<UserAchievementItem> CreateAsync(string userId, Achievement achievement, CancellationToken ct = default)
+    public async Task<UserAchievementItem> CreateAsync(string userId, Achievement achievement, ulong xp, CancellationToken ct = default)
     {
-        var document = new UserAchievementItem(userId, achievement, DateTime.UtcNow);
+        var document = new UserAchievementItem(userId, achievement, xp, DateTime.UtcNow);
         await _collection.InsertOneAsync(document, cancellationToken: ct);
         return document;
+    }
+
+    public async Task IncrementXpAsync(string userId, ulong amount, CancellationToken ct = default)
+    {
+        var filter = Builders<UserAchievementItem>.Filter.Eq(u => u.UserId, userId);
+        var update = Builders<UserAchievementItem>.Update.Inc(u => u.Xp, amount);
+        await _collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true }, cancellationToken: ct);
     }
 }
