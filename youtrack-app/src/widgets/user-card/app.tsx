@@ -1,10 +1,21 @@
 import React, {memo} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
-
 import {type UserCardData} from './types';
 import {mockUserCardData} from './mock-data';
 
 await YTApp.register();
+
+//const host = await YTApp.register() as HostAPI;
+
+// async function fetchUserCardData(): Promise<UserCardData | null> {
+//     try {
+//         const userId = YTApp.entity?.id;
+//         if (!userId) {return null;}
+//         return await host.fetchApp<UserCardData>(`backend/users/${userId}/card`);
+//     } catch {
+//         return null;
+//     }
+// }
 
 interface UserCardProps {
     data: UserCardData;
@@ -38,8 +49,29 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
   </div>
 );
 
-const AppComponent: React.FunctionComponent = () => (
-  <UserCard data={mockUserCardData}/>
-);
+const AppComponent: React.FunctionComponent = () => {
+    if (mockUserCardData) {
+        return <UserCard data={mockUserCardData}/>;
+    }
+    return null;
+};
+
+// const AppComponent: React.FunctionComponent = () => {
+//   const [data, setData] = useState<UserCardData | null>(null);
+//
+//   useEffect(() => {
+//     fetchUserCardData().then(result => {
+//       if (result) {
+//         setData(result);
+//       } else {
+//         host.closeWidget();
+//       }
+//     });
+//   }, []);
+//
+//   if (!data) return null;
+//
+//   return <UserCard data={data}/>;
+// };
 
 export const App = memo(AppComponent);
