@@ -34,15 +34,18 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
       <span className="user-balance">Balance: {data.balance}</span>
       <div className="achievements">
         {data.achievements.map(achievement => (
-          <img
-            key={achievement.id}
-            className="achievement-icon"
-            src={achievement.imageUrl}
-            alt={achievement.description}
-            title={achievement.description}
-            width={24}
-            height={24}
-          />
+          <div key={achievement.id} className="achievement-item" title={achievement.description}>
+            <img
+              className="achievement-icon"
+              src={achievement.imageUrl}
+              alt={achievement.description}
+              width={24}
+              height={24}
+            />
+            {achievement.count > 1 && (
+              <span className="achievement-count">{achievement.count}</span>
+            )}
+          </div>
                 ))}
       </div>
     </div>
