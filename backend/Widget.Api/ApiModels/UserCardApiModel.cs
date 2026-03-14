@@ -7,8 +7,8 @@ public record UserAchievementApiModel(
     int Count);
 
 public record UserCardApiModel(
-    int Xp,
-    int MaxXp,
+    ulong Xp,
+    ulong MaxXp,
     int Level,
-    int Balance,
+    ulong Balance,
     UserAchievementApiModel[] Achievements);

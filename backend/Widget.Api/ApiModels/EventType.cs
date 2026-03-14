@@ -4,5 +4,6 @@ public enum EventType
 {
     ISSUE_RESOLVED,
     BUG_CREATED,
-    BUG_RESOLVED
+    BUG_RESOLVED,
+    STORY_DONE
 }
