@@ -1,0 +1,26 @@
+.widget {
+  margin: calc(var(--ring-unit) / 2);
+}
+
+.achievement-row {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--ring-unit) * 1.5);
+  padding: var(--ring-unit) 0;
+  border-bottom: 1px solid var(--ring-line-color);
+}
+
+.achievement-row:last-child {
+  border-bottom: none;
+}
+
+.achievement-icon {
+  flex-shrink: 0;
+  border-radius: var(--ring-border-radius);
+}
+
+.achievement-text {
+  font-size: var(--ring-font-size);
+  line-height: var(--ring-line-height);
+  color: var(--ring-text-color);
+}

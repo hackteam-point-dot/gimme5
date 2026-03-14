@@ -21,9 +21,12 @@
       "key": "gimme5_user_card",
       "name": "GiveMeFive user card",
       "indexPath": "user-card/index.html",
-      "extensionPoint": "DASHBOARD_WIDGET",
+      "extensionPoint": "USER_CARD",
       "iconPath": "user-card/widget-icon.svg",
-      "description": "Shows user card in GiveMeFive system"
+      "description": "Shows user card in GiveMeFive system",
+      "expectedDimensions": {
+        "height": 40
+      }
     },
     {
       "key": "gimme5",
