@@ -3,7 +3,7 @@ using Widget.Api.Repositories;
 
 namespace Widget.Api.Application;
 
-public class XpService(ProjectConfigurationRepository projectConfigurationRepository)
+public class XpService(ProjectConfigurationRepository projectConfigurationRepository, UserRepository userRepository)
 {
     public record XpAddResult(ulong Exp, ulong ExpChange);
     
@@ -13,7 +13,9 @@ public class XpService(ProjectConfigurationRepository projectConfigurationReposi
         {
             var cfg = await projectConfigurationRepository.GetByProjectIdAsync(eventApiModel.ProjectKey);
             
-            if (cfg is null)
+            var user = await userRepository.GetUserById(eventApiModel.Login);
+            
+            if (cfg is null || user is null)
                 return new (0, 0);
 
             int taskXp = cfg.DefaultIssueWeight;
@@ -30,7 +32,7 @@ public class XpService(ProjectConfigurationRepository projectConfigurationReposi
                     taskXp = (int)timeSpan.TotalHours * cfg.IssueUnitWeight;
             }
 
-            return new(0, (ulong)taskXp);
+            return new(user.Xp, (ulong)taskXp);
         }
         
         return new (0, 0);
