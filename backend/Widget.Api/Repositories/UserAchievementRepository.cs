@@ -25,10 +25,19 @@ public class UserAchievementRepository(IMongoDatabase database)
         return document;
     }
 
-    public async Task IncrementXpAsync(string userId, ulong amount, CancellationToken ct = default)
+    public async Task<UserAchievementItem?> IncrementXpAsync(string userId, ulong amount, CancellationToken ct = default)
     {
         var filter = Builders<UserAchievementItem>.Filter.Eq(u => u.UserId, userId);
         var update = Builders<UserAchievementItem>.Update.Inc(u => u.Xp, amount);
-        await _collection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true }, cancellationToken: ct);
+
+        return await _collection.FindOneAndUpdateAsync(
+            filter,
+            update,
+            new FindOneAndUpdateOptions<UserAchievementItem>
+            {
+                IsUpsert = false,
+                ReturnDocument = ReturnDocument.After
+            },
+            cancellationToken: ct);
     }
 }

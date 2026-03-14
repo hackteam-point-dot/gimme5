@@ -1,11 +1,11 @@
 using System.Text.Json.Serialization;
 using MongoDB.Driver;
+using Widget.Api.Application;
 using Widget.Api.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllers();
+// Add services to the container. ;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers()
@@ -35,6 +35,8 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddScoped<UserAchievementRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<TasksRepository>();
+builder.Services.AddTransient<AchievementService>();
+builder.Services.AddTransient<XpService>();
 
 var app = builder.Build();
 
