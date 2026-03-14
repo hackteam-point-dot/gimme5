@@ -25,10 +25,10 @@ public class EventsController(
         var actualExp = await xpService.TryAddXp(args);
         
         if (task != null)
-            await achievementService.CalculateAchievements();
+            await achievementService.CalculateAchievements(args.Login);
 
         if (actualExp.ExpChange == 0) 
-            return Ok(null);
+            return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo));
         
         await tasksRepository.SetExpAwardedAsync(args.IssueId, true);
             

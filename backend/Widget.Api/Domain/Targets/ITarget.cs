@@ -1,6 +1,8 @@
-﻿namespace Widget.Api.Domain.Targets;
+﻿using Widget.Api.Repositories;
+
+namespace Widget.Api.Domain.Targets;
 
 public interface ITarget
 {
-    bool IsAchieved();
+    bool IsAchieved(string userId, IReadOnlyCollection<TasksRepository.TaskItem> tasks);
 }

@@ -10,12 +10,18 @@ public class TasksRepository(IMongoDatabase database)
         string Id,
         string ProjectId,
         EventType Status,
-        string? ResolverId,
+        string ResolverId,
         bool ExpAwarded,
         ImmutableList<string> SubTaskIds);
 
     private readonly IMongoCollection<TaskItem> _collection =
         database.GetCollection<TaskItem>("Tasks");
+
+    public async Task<List<TaskItem>> GetAllAsync(CancellationToken ct = default)
+    {
+        return await _collection.Find(FilterDefinition<TaskItem>.Empty)
+            .ToListAsync(cancellationToken: ct);
+    }
 
     public async Task<List<TaskItem>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken ct = default)
     {
