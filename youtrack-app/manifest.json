@@ -25,7 +25,7 @@
       "iconPath": "user-card/widget-icon.svg",
       "description": "Shows user card in GiveMeFive system",
       "expectedDimensions": {
-        "height": 40
+        "height": 100
       }
     },
     {

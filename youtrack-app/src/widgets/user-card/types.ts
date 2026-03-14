@@ -3,3 +3,9 @@ export interface Achievement {
   imageUrl: string;
   description: string;
 }
+
+export interface UserCardData {
+  xp: number;
+  balance: number;
+  achievements: Achievement[];
+}

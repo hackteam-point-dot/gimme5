@@ -1,33 +1,38 @@
 import React, {memo} from 'react';
 
-import {type Achievement} from './types';
-import {mockAchievements} from './mock-data';
+import {type UserCardData} from './types';
+import {mockUserCardData} from './mock-data';
 
 await YTApp.register();
 
-interface AchievementRowProps {
-  achievement: Achievement;
+interface UserCardProps {
+  data: UserCardData;
 }
 
-const AchievementRow: React.FunctionComponent<AchievementRowProps> = ({achievement}) => (
-  <div className="achievement-row">
-    <img
-      className="achievement-icon"
-      src={achievement.imageUrl}
-      alt=""
-      width={48}
-      height={48}
-    />
-    <span className="achievement-text">{achievement.description}</span>
+const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
+  <div className="widget">
+    <div className="stats-row">
+      <span className="stat">XP: {data.xp}</span>
+      <span className="stat">Balance: {data.balance}</span>
+    </div>
+    <div className="achievements-row">
+      {data.achievements.map(achievement => (
+        <img
+          key={achievement.id}
+          className="achievement-icon"
+          src={achievement.imageUrl}
+          alt={achievement.description}
+          title={achievement.description}
+          width={16}
+          height={16}
+        />
+      ))}
+    </div>
   </div>
 );
 
 const AppComponent: React.FunctionComponent = () => (
-  <div className="widget">
-    {mockAchievements.map(achievement => (
-      <AchievementRow key={achievement.id} achievement={achievement}/>
-    ))}
-  </div>
+  <UserCard data={mockUserCardData}/>
 );
 
 export const App = memo(AppComponent);
