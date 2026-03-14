@@ -1,0 +1,26 @@
+﻿services:
+#  widget.api:
+#    image: widget.api
+#    build:
+#      context: .
+#      dockerfile: Widget.Api/Dockerfile
+#    depends_on:
+#      - mongodb
+#    environment:
+#      ConnectionStrings__MongoDb: mongodb://admin:admin@mongodb:27017/?authSource=admin
+#      MongoDb__DatabaseName: WidgetDb
+
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongodb_data:/data/db
+
+volumes:
+  mongodb_data:
