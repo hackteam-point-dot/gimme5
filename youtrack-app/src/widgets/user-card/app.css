@@ -16,6 +16,25 @@
   font-weight: bold;
 }
 
+.level-row {
+  padding: var(--ring-unit) 0;
+  border-bottom: 1px solid var(--ring-line-color);
+}
+
+.level-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--ring-font-size-smaller);
+  line-height: var(--ring-line-height-lowest);
+  color: var(--ring-secondary-color);
+  margin-bottom: calc(var(--ring-unit) / 2);
+}
+
+.level-label {
+  font-weight: bold;
+  color: var(--ring-text-color);
+}
+
 .achievements-row {
   display: flex;
   flex-wrap: wrap;

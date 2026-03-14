@@ -2,6 +2,8 @@ import {type UserCardData} from './types';
 
 export const mockUserCardData: UserCardData = {
   xp: 1250,
+  maxXp: 2000,
+  level: 5,
   balance: 500,
   achievements: [
     {
