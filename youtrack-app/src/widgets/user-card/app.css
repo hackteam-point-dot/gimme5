@@ -64,7 +64,6 @@
 }
 
 .user-balance {
-    padding-top: var(--ring-unit);
     font-weight: bold;
     padding-right: var(--ring-unit);
 }
