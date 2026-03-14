@@ -39,8 +39,8 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
               className="achievement-icon"
               src={achievement.imageUrl}
               alt={achievement.description}
-              width={36}
-              height={36}
+              width={32}
+              height={32}
             />
             {achievement.count > 1 && (
             <span className="achievement-count">{achievement.count}</span>
