@@ -8,4 +8,5 @@ public record PostEventApiModel(
     string ProjectName, 
     string[]? Children, 
     Priority IssuePriority, 
-    string? StoryPoints);
+    string? StoryPoints,
+    long? DueDate);

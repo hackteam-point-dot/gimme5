@@ -6,12 +6,19 @@ namespace Widget.Api.Repositories;
 
 public class TasksRepository(IMongoDatabase database)
 {
+    public enum TaskType
+    {
+        Issue, Bug
+    }
+    
     public record TaskItem(
         string Id,
         string ProjectId,
         EventType Status,
+        TaskType Type,
         string ResolverId,
         bool ExpAwarded,
+        DateTime? DateResolved,
         ImmutableList<string> SubTaskIds);
 
     private readonly IMongoCollection<TaskItem> _collection =
@@ -36,6 +43,8 @@ public class TasksRepository(IMongoDatabase database)
             .Set(t => t.Status, item.Status)
             .Set(t => t.ResolverId, item.ResolverId)
             .Set(t => t.SubTaskIds, item.SubTaskIds)
+            .Set(t => t.Type, item.Type)
+            .Set(t => t.DateResolved, item.DateResolved)
             .SetOnInsert(t => t.ExpAwarded, item.ExpAwarded);
 
         return await _collection.FindOneAndUpdateAsync(

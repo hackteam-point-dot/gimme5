@@ -14,24 +14,31 @@ public class EventsController(
     XpService xpService) : ControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<PostEventApiModel?>> PostEvent([FromBody] PostEventApiModel args)
+    public async Task<ActionResult<EventApiResponse?>> PostEvent([FromBody] PostEventApiModel args)
     {
+        var taskType = args.Event switch
+        {
+            EventType.ISSUE_RESOLVED => TasksRepository.TaskType.Issue,
+            EventType.BUG_RESOLVED => TasksRepository.TaskType.Bug,
+            EventType.BUG_CREATED => TasksRepository.TaskType.Bug
+        };
+        
         var task = await tasksRepository.CreateOrUpdateAsync(new TasksRepository.TaskItem(args.IssueId, args.ProjectKey,
-            EventType.ISSUE_RESOLVED, args.Login, false, args.Children?.ToImmutableList() ?? []));
+            args.Event, taskType, args.Login, false, DateTime.UtcNow, args.Children?.ToImmutableList() ?? []));
         
         if (task?.ExpAwarded == true)
             return Ok(null);
         
         var actualExp = await xpService.TryAddXp(args);
-        
-        if (task != null)
-            await achievementService.CalculateAchievements(args.Login);
+        var achievementResult = await achievementService.CalculateAchievements(args, args.Login);
 
-        if (actualExp.ExpChange == 0) 
-            return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo));
+        if (actualExp.ExpChange == 0)
+            return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo,
+                achievementResult.AchievementName, achievementResult.Exp));
         
         await tasksRepository.SetExpAwardedAsync(args.IssueId, true);
-            
-        return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo));
+
+        return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo,
+            achievementResult.AchievementName, achievementResult.Exp));
     }
 }

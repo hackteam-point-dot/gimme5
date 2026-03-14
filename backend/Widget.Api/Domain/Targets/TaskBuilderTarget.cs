@@ -1,4 +1,5 @@
-﻿using Widget.Api.Domain;
+﻿using Widget.Api.ApiModels;
+using Widget.Api.Domain;
 using Widget.Api.Repositories;
 
 namespace Widget.Api.Domain.Targets;
@@ -7,8 +8,8 @@ public class TaskBuilderTarget : ITarget
 {
     public Achievement Achievement => Achievement.TaskBuilder;
 
-    public bool IsAchieved(string userId, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
+    public AchievementResult Achieve(PostEventApiModel action, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
-        return true;
+        return new AchievementResult(true, 50);
     }
 }
