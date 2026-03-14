@@ -6,5 +6,5 @@ public record PostEventApiModel(
     string Login,
     string ProjectKey,
     string ProjectName,
-    string[] Children,
+    string[]? Children,
     int StoryPoints);

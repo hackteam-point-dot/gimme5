@@ -8,17 +8,17 @@ public class TasksRepository(IMongoDatabase database)
     public record TaskItem(
         string Id,
         string ProjectId,
-        string? ParentTaskId,
-        string AssigneeId,
+        string CreatorId,
         int StoryPoints,
-        EventType Status);
+        EventType Status,
+        string? ResolverId);
 
     private readonly IMongoCollection<TaskItem> _collection =
         database.GetCollection<TaskItem>("Tasks");
 
-    public async Task<List<TaskItem>> GetSubtasksAsync(string parentTaskId, CancellationToken ct = default)
+    public async Task<List<TaskItem>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken ct = default)
     {
-        return await _collection.Find(t => t.ParentTaskId == parentTaskId)
+        return await _collection.Find(t => ids.Contains(t.Id))
             .ToListAsync(cancellationToken: ct);
     }
 }
