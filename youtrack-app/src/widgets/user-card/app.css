@@ -23,7 +23,7 @@
 
 .achievements-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     padding-top: var(--ring-unit);
 }
 
@@ -64,6 +64,7 @@
 }
 
 .user-balance {
+    padding-top: var(--ring-unit);
     font-weight: bold;
     padding-right: var(--ring-unit);
 }
