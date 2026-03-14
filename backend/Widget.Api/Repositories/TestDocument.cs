@@ -1,7 +1,7 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Widget.Api.Models;
+namespace Widget.Api.Repositories;
 
 public class TestDocument
 {

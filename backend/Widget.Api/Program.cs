@@ -11,6 +11,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllers()
 .AddJsonOptions(options =>
 {
+    options.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
@@ -31,7 +32,7 @@ builder.Services.AddSingleton(sp =>
     return mongoClient.GetDatabase(databaseName);
 });
 
-builder.Services.AddScoped<TestRepository>();
+builder.Services.AddScoped<UserAchievementRepository>();
 
 var app = builder.Build();
 
