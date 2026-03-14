@@ -11,7 +11,7 @@ async function fetchUserCardData(): Promise<UserCardData | null> {
         if (!userId) {
             return null;
         }
-        console.log(userId);
+        console.log(YTApp.entity);
         console.log(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userId)}`);
         const response = await fetch(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userId)}`);
         if (!response.ok) {
