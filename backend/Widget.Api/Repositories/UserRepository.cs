@@ -22,4 +22,12 @@ public class UserRepository(IMongoDatabase database)
         await _collection.InsertOneAsync(document, cancellationToken: ct);
         return document;
     }
+
+    public async Task<List<UserItem>> GetLeaderboardAsync(string projectId, int limit = 10, CancellationToken ct = default)
+    {
+        return await _collection.Find(u => u.Id.ProjectId == projectId)
+            .SortByDescending(u => u.Balance)
+            .Limit(limit)
+            .ToListAsync(cancellationToken: ct);
+    }
 }
