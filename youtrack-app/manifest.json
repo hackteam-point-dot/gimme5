@@ -19,14 +19,11 @@
     },
     {
       "key": "gimme5_user_card",
-      "name": "GiveMeFive user card",
+      "name": "Honor board",
       "indexPath": "user-card/index.html",
       "extensionPoint": "USER_CARD",
       "iconPath": "user-card/widget-icon.svg",
-      "description": "Shows user card in GiveMeFive system",
-      "expectedDimensions": {
-        "height": 100
-      }
+      "description": "Shows user card in GiveMeFive system"
     },
     {
       "key": "gimme5",
