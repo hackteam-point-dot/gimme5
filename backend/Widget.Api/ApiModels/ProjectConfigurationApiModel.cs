@@ -1,4 +1,5 @@
 using Widget.Api.Application;
+using Widget.Api.Domain;
 
 namespace Widget.Api.ApiModels;
 
@@ -10,5 +11,5 @@ public record ProjectConfigurationApiModel(
     int IssueResolveReward,
     int BugResolveReward,
     string IssueWeightFieldName,
-    Dictionary<Widget.Api.Application.Priority, decimal> PriorityMultipliers,
-    Dictionary<Widget.Api.Domain.Achievement, int> AchievementRewards);
+    Dictionary<Priority, decimal> PriorityMultipliers,
+    Dictionary<Achievement, int> AchievementRewards);

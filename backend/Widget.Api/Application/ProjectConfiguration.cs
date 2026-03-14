@@ -1,5 +1,6 @@
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson.Serialization.Options;
+using Widget.Api.ApiModels;
 using Widget.Api.Domain;
 
 namespace Widget.Api.Application;
@@ -27,12 +28,4 @@ public enum IssueWeightType
 {
     StoryPoints,
     Time
-}
-
-public enum Priority
-{
-    Minor,
-    Normal,
-    Major,
-    Critical
 }
