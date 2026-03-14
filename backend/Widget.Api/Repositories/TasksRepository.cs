@@ -22,12 +22,16 @@ public class TasksRepository(IMongoDatabase database)
             .ToListAsync(cancellationToken: ct);
     }
 
-    public async Task CreateOrUpdateAsync(TaskItem item, CancellationToken ct = default)
+    public async Task<TaskItem?> CreateOrUpdateAsync(TaskItem item, CancellationToken ct = default)
     {
-        await _collection.ReplaceOneAsync(
+        return await _collection.FindOneAndReplaceAsync(
             t => t.Id == item.Id,
             item,
-            new ReplaceOptions { IsUpsert = true },
+            new FindOneAndReplaceOptions<TaskItem>
+            {
+                IsUpsert = true,
+                ReturnDocument = ReturnDocument.After
+            },
             cancellationToken: ct);
     }
 }
