@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
-const GAME_HEIGHT = 93;
-const GRAVITY = 0.096; // Уменьшено на 20% (от 0.12)
-const JUMP_STRENGTH = -1.76; // Уменьшено на 20% (от -2.2)
+const GAME_HEIGHT = 90;
+const GRAVITY = 0.1056; // Увеличено на 10% (от 0.096)
+const JUMP_STRENGTH = -1.936; // Увеличено на 10% (от -1.76)
 
-const SCROLL_SPEED = 0.8; 
+const SCROLL_SPEED = 0.96; // Увеличено на 20% (от 0.8) 
 const SPRINT_WIDTH = 80;
 const SPRINT_GAP = 46; 
 const BUG_WIDTH = 16;

@@ -65,7 +65,7 @@ function App() {
         }}>
           <h3 style={{ marginBottom: '16px', color: '#333' }}>Constrained Widget Testing Area</h3>
           <div style={{
-            width: '300px', height: '93px', 
+            width: '300px', height: '90px', 
             border: '2px solid red', 
             borderRadius: '8px',
             position: 'relative',
