@@ -10,6 +10,7 @@ public class UserRepository(IMongoDatabase database)
         string Id,
         ulong Xp,
         int Level,
+        string Title,
         DateTime DateCreated);
 
     private readonly IMongoCollection<UserItem> _usersCollection = database.GetCollection<UserItem>("Users");
@@ -33,12 +34,16 @@ public class UserRepository(IMongoDatabase database)
         return await _usersCollection.CountDocumentsAsync(u => true, cancellationToken: ct);
     }
 
-    public async Task<UserItem?> SetXpAndLevel(string userId, ulong xp, int level, CancellationToken ct = default)
+    public async Task<UserItem?> SetXpAndLevel(string userId, ulong xp, int level, string title,
+        CancellationToken ct = default)
     {
         var filter = Builders<UserItem>.Filter.Eq(u => u.Id, userId);
         var update = Builders<UserItem>.Update
             .Set(u => u.Xp, xp)
             .Set(u => u.Level, level);
+
+        if (!string.IsNullOrEmpty(title))
+            update.Set(x => x.Title, title);
 
         return await _usersCollection.FindOneAndUpdateAsync(
             filter,
