@@ -52,13 +52,10 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
             onClose={() => setEasterEggRevealed(false)}
             onScoreSubmit={async (score) => {
 
-              console.log(`onScoreSubmit 1`);
               const userLogin = YTApp.entity?.login;
-              console.log(`onScoreSubmit 2`);
               if (!userLogin) {
                   return null;
               }
-              console.log(`onScoreSubmit 3`);
               try {
                   console.log(`Submitting score for user ${userLogin}: ${score}`);
                   const response = await host.fetchApp('backend/easter-egg', {
