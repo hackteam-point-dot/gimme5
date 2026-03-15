@@ -1,7 +1,7 @@
 import React, {memo, useEffect, useState} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
 import {type Achievement, type UserCardData} from './types';
-import { FlappyBug } from '../../flappy-bug/FlappyBug';
+import {FlappyBug} from '../../flappy-bug/FlappyBug';
 
 const host = await YTApp.register();
 
@@ -23,86 +23,87 @@ interface UserCardProps {
 }
 
 const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
-  const [clickCounts, setClickCounts] = useState<Record<number, number>>({});
-  const [easterEggRevealed, setEasterEggRevealed] = useState<boolean>();
+    const [clickCounts, setClickCounts] = useState<Record<number, number>>({});
+    const [easterEggRevealed, setEasterEggRevealed] = useState<boolean>();
 
-  const handleAchievementClick = (achievement: Achievement) => {
-    setClickCounts(prev => {
-      if (achievement.id !== 3){
-        return prev;
-      }
-
-      const prevCount = prev[achievement.id] ?? 0;
-      const nextCount = prevCount + 1;
-      const next = {...prev, [achievement.id]: nextCount};
-
-      if (nextCount === 5) {
-        setEasterEggRevealed(() => true);
-      }
-
-      return next;
-    });
-  };
-
-  return (
-    <div className="widget">
-      {easterEggRevealed ? (
-        <FlappyBug
-          //userId={currentUser.id} 
-          onClose={() => setEasterEggRevealed(false)}
-          onScoreSubmit={(score) => {
-            const userLogin = YTApp.entity?.login;
-            if (!userLogin) {
-                return null;
+    const handleAchievementClick = (achievement: Achievement) => {
+        setClickCounts(prev => {
+            if (achievement.id !== 3) {
+                return prev;
             }
-            saveEasterEggScore(userLogin, score);
-          }}
-        />
-      ) : (
-        <>
-          <div className="level-row">
-            <div className="level-header">
-              <span className="level-label">Level {data.level}</span>
-              <span className="level-xp">{data.xp} / {data.maxXp}</span>
-            </div>
-            <ProgressBar value={data.xp} max={data.maxXp} />
-          </div>
-          <div className="achievements-row">
-            <div className="achievements">
-              {data.achievements.map(achievement => {
-                return (
-                  <div
-                    key={achievement.id}
-                    className="achievement-item"
-                    title={achievement.description}
-                    onClick={() => handleAchievementClick(achievement)}
-                  >
-                    <img
-                      className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
-                      src={achievement.imageUrl}
-                      alt={achievement.description}
-                      width={32}
-                      height={32}
-                    />
-                    {achievement.count > 1 && (
-                      <span className="achievement-count">x{achievement.count}</span>
-                    )}
+
+            const prevCount = prev[achievement.id] ?? 0;
+            const nextCount = prevCount + 1;
+            const next = {...prev, [achievement.id]: nextCount};
+
+            if (nextCount === 5) {
+                setEasterEggRevealed(() => true);
+            }
+
+            return next;
+        });
+    };
+
+    return (
+      <div className="widget">
+        {easterEggRevealed ? (
+          <FlappyBug
+                    //userId={currentUser.id} 
+            onClose={() => setEasterEggRevealed(false)}
+            onScoreSubmit={(score) => {
+                        const userLogin = YTApp.entity?.login;
+                        if (!userLogin) {
+                            return null;
+                        }
+                        saveEasterEggScore(userLogin, score);
+                    }}
+          />
+            ) : (
+              <>
+                <div className="level-row">
+                  <div className="level-header">
+                    <span className="level-label">Level: {data.level}, class: {data.heroClass}</span>
+                    <span className="level-xp">{data.xp} / {data.maxXp}</span>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        </>)}
-    </div>
-  );
+                  <ProgressBar value={data.xp} max={data.maxXp}/>
+                </div>
+                <div className="achievements-row">
+                  <div className="achievements">
+                    {data.achievements.map(achievement => {
+                                return (
+                                  <div
+                                    key={achievement.id}
+                                    className="achievement-item"
+                                    title={achievement.description}
+                                    onClick={() => handleAchievementClick(achievement)}
+                                  >
+                                    <img
+                                      className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
+                                      src={achievement.imageUrl}
+                                      alt={achievement.description}
+                                      width={32}
+                                      height={32}
+                                    />
+                                    {achievement.count > 1 && (
+                                    <span className="achievement-count">x{achievement.count}</span>
+                                        )}
+                                  </div>
+                                );
+                            })}
+                  </div>
+                </div>
+              </>
+)}
+      </div>
+    );
 };
 
 async function saveEasterEggScore(userId: string, score: number): Promise<boolean> {
     try {
         await host.fetchApp('backend/easter-egg', {
             body: {
-              userId: userId,
-              score: score 
+                userId: userId,
+                score: score
             },
         });
         return true;
