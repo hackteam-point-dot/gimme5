@@ -4,7 +4,7 @@ public class LazyBastardTarget : ISecretTarget
 {
     public AchievementResult IsAchieved(string userId, int score)
     {
-        return score >= 2 
+        return score > 0
             ? new AchievementResult(true, 300, []) 
             : AchievementResult.NoResult;
     }
