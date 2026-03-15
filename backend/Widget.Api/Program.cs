@@ -30,7 +30,7 @@ builder.Services.AddControllers()
 
 builder.Services.AddSingleton<IMongoClient>(_ =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("MongoDb")
+    var connectionString = builder.Configuration["CUSTOMCONNSTR_MONGO"]
                            ?? throw new InvalidOperationException("Connection string 'MongoDb' is not configured.");
 
     return new MongoClient(connectionString);
