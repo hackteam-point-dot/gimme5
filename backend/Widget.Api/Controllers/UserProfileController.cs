@@ -25,13 +25,14 @@ public class UserProfileController(
         UserCardApiModel card;
 
         var achievements = Enum.GetValues<Achievement>()
+            .Where(x =>  x != Achievement.EasterAgg || userAchievementLevels.ContainsKey(Achievement.EasterAgg))
             .Select(achievementType =>
             {
                 var level = userAchievementLevels.GetValueOrDefault(achievementType, 0);
                 return Mapper.MapUserAchievementApiModel(achievementType, level);
             })
-            .ToArray();
-
+            .ToList();
+        
         if (user == null)
         {
             var firstLevel = levelCalculator.FirstLevelInfo;

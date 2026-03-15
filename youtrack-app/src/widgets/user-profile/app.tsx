@@ -48,7 +48,7 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
       <div className="widget">
         {easterEggRevealed ? (
           <FlappyBug
-                    //userId={currentUser.id} 
+                    //userId={currentUser.id}
             onClose={() => setEasterEggRevealed(false)}
             onScoreSubmit={(score) => {
                         const userLogin = YTApp.entity?.login;

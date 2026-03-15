@@ -40,4 +40,11 @@ public class EventsController(
         return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo,
             achievementResult.AchievementName, achievementResult.Exp, actualExp.HeroClass));
     }
+
+    [HttpPost]
+    [Route("flappy-bug")]
+    public async Task FlappyScore([FromBody]FlappyScoreApiRequest score, CancellationToken ct)
+    {
+        
+    }
 }

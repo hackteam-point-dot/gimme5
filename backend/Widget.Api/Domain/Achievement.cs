@@ -7,5 +7,6 @@ public enum Achievement
     OnFire,
     BugHunter,
     NightOwl,
-    Sheeva
+    Sheeva,
+    EasterAgg
 }
