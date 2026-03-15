@@ -12,7 +12,7 @@ import {type ProjectConfiguration} from './types';
 import './app.css';
 
 const host = await YTApp.register() as HostAPI;
-const PROJECT_ID = YTApp.entity!.id;
+const PROJECT_ID = 'SCR';
 
 const WEIGHT_TYPE_OPTIONS = [
   {key: 'None', label: 'Не учитывать (Выкл)'},
