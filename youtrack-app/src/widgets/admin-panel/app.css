@@ -2,12 +2,19 @@
   margin: calc(var(--ring-unit) / 2);
 }
 
+.admin-panel {
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
 .section-header {
   font-size: 14px;
   margin: 0 0 8px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid var(--ring-line-color, #eee);
   padding-bottom: 4px;
-  color: #333;
+  color: var(--ring-secondary-color, #333);
 }
 
 .config-row {
@@ -16,7 +23,6 @@
   align-items: center;
   margin-bottom: 8px;
   font-size: 13px;
-  padding-right: 32px;
 }
 
 .input-group {
@@ -48,7 +54,6 @@
   margin-top: 8px;
   display: flex;
   justify-content: flex-end;
-  padding-right: 32px;
 }
 
 .access-denied {

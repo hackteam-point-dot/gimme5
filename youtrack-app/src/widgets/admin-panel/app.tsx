@@ -128,14 +128,14 @@ const AppComponent: React.FunctionComponent = () => {
   const selectedWeightType = WEIGHT_TYPE_OPTIONS.find(o => o.key === config.issueWeightType) ?? WEIGHT_TYPE_OPTIONS[0];
 
   return (
-    <Island style={{width: '100%', boxSizing: 'border-box'}}>
-      <Header border style={{display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', backgroundColor: '#F8F9FA'}}>
+    <Island>
+      <Header border style={{display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px'}}>
         <span style={{fontSize: '16px'}}>⚙️</span>
         <strong>GiveMeFive Config Panel (Admin)</strong>
       </Header>
 
       <Content>
-        <div style={{display: 'flex', flexDirection: 'column', gap: '16px'}}>
+        <div className="admin-panel">
 
           {/* Base XP */}
           <div>
