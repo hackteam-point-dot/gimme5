@@ -43,7 +43,7 @@ public class UserRepository(IMongoDatabase database)
             .Set(u => u.Level, level);
 
         if (!string.IsNullOrEmpty(title))
-            update.Set(x => x.Title, title);
+            update = update.Set(x => x.Title, title);
 
         return await _usersCollection.FindOneAndUpdateAsync(
             filter,
