@@ -43,7 +43,7 @@
     },
     {
       "key": "gimme5_previous_rating",
-      "name": "GiveMeFive previous sprint leaderboard",
+      "name": "GiveMeFive previous period leaderboard",
       "indexPath": "previous-dashboard/index.html",
       "extensionPoint": "DASHBOARD_WIDGET",
       "iconPath": "previous-dashboard/widget-icon.svg",
