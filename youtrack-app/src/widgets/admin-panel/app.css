@@ -1,0 +1,59 @@
+.widget {
+  margin: calc(var(--ring-unit) / 2);
+}
+
+.section-header {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 4px;
+  color: #333;
+}
+
+.config-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 13px;
+  padding-right: 32px;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.input-wrap {
+  width: 120px;
+}
+
+.input-wrap-narrow {
+  width: 200px;
+}
+
+.suffix {
+  width: 24px;
+  text-align: left;
+}
+
+.achievement-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.save-container {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 32px;
+}
+
+.access-denied {
+  padding: 24px;
+  text-align: center;
+  color: var(--ring-secondary-color);
+  font-size: 14px;
+}
