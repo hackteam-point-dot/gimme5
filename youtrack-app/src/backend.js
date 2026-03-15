@@ -32,6 +32,28 @@ exports.httpHandler = {
         const response = connection.getSync('/api/UserProfile/card?userId=' + encodeURIComponent(userId), '');
         ctx.response.json(JSON.parse(response.response));
       }
+    },
+    {
+      method: 'GET',
+      path: 'project-configuration',
+      handle: function handle(ctx) {
+        const projectId = ctx.request.getParameter('projectId');
+        const connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
+        connection.addHeader({name: 'Content-Type', value: 'application/json'});
+        const response = connection.getSync('/api/ProjectConfiguration?projectId=' + encodeURIComponent(projectId), '');
+        ctx.response.json(JSON.parse(response.response));
+      }
+    },
+    {
+      method: 'PUT',
+      path: 'project-configuration',
+      handle: function handle(ctx) {
+        var body = ctx.request.body;
+        var connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
+        connection.addHeader({name: 'Content-Type', value: 'application/json'});
+        var response = connection.putSync('/api/ProjectConfiguration', [], body);
+        ctx.response.json(JSON.parse(response.response));
+      }
     }
   ]
 };
