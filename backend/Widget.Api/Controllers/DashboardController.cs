@@ -36,7 +36,7 @@ public class DashboardController(
                         ? levels.Select(x => Mapper.MapUserAchievementApiModel(x.Key, x.Value)).ToArray()
                         : []
                     ;
-                return new UserLeaderboardApiModel.Item(u.Id, u.Xp, u.Level, achievements);
+                return new UserLeaderboardApiModel.Item(u.Id, u.Xp, u.Level, achievements, u.Title);
             });
 
             var leaderboard = new UserLeaderboardApiModel(items, skip, totalCount);
@@ -47,7 +47,7 @@ public class DashboardController(
         {
             var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(projectId, ct) ??
                                 await leaderboardRepository.StartNewPeriod(projectId, ct);
-
+            
             var users = await leaderboardRepository.GetLeaderboard(currentPeriod.Id, limit, skip, ct);
             var totalCount = await leaderboardRepository.GetTotalUsersCount(currentPeriod.Id, ct);
 
@@ -56,14 +56,15 @@ public class DashboardController(
                     x => x.Key.UserId,
                     x => x.Achievements.GroupBy(y => y).ToDictionary(y => y.Key, y => y.Count()));
 
-            var items = users.Select(u =>
+            var items = users.Select(async u =>
             {
+                var user = await userRepository.GetUserById(u.Key.UserId, ct);
                 var achievements = userAchievementLevelsByUserId.TryGetValue(u.Key.UserId, out var levels)
                         ? levels.Select(x => Mapper.MapUserAchievementApiModel(x.Key, x.Value)).ToArray()
                         : []
                     ;
-                return new UserLeaderboardApiModel.Item(u.Key.UserId, u.Exp, 0, achievements);
-            });
+                return new UserLeaderboardApiModel.Item(u.Key.UserId, u.Exp, 0, achievements, user?.Title ?? string.Empty);
+            }).Select(x => x.Result);
 
             var leaderboard = new UserLeaderboardApiModel(items, skip, totalCount);
 
