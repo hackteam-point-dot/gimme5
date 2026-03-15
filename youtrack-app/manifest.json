@@ -7,7 +7,7 @@
     "name": "",
     "url": "https://www.jetbrains.com/"
   },
-  "icon": "icon.svg?v=2",
+  "icon": "icon.svg",
   "widgets": [
     {
       "key": "gimme5_user_rating",
