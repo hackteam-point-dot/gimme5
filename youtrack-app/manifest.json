@@ -32,6 +32,14 @@
       "extensionPoint": "DASHBOARD_WIDGET",
       "iconPath": "team-dashboard/widget-icon.svg",
       "description": "Shows team rating in GiveMeFive system"
+    },
+    {
+      "key": "gimme5_test",
+      "name": "GiveMeFive test widget",
+      "indexPath": "gimme5/index.html",
+      "extensionPoint": "DASHBOARD_WIDGET",
+      "iconPath": "gimme5/widget-icon.svg",
+      "description": ""
     }
   ]
 }
