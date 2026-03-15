@@ -1,5 +1,6 @@
 .widget {
     margin: calc(var(--ring-unit) / 2);
+    max-width: 400px;
 }
 
 .level-row {
