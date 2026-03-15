@@ -48,15 +48,31 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
       <div className="widget">
         {easterEggRevealed ? (
           <FlappyBug
-                    //userId={currentUser.id}
+            userId={YTApp.entity?.login}
             onClose={() => setEasterEggRevealed(false)}
-            onScoreSubmit={(score) => {
-                        const userLogin = YTApp.entity?.login;
-                        if (!userLogin) {
-                            return null;
-                        }
-                        saveEasterEggScore(userLogin, score);
-                    }}
+            onScoreSubmit={async (score) => {
+                const userLogin = YTApp.entity?.login;
+                if (!userLogin) {
+                    return null;
+                }
+                try {
+                    console.log(`Submitting score for user ${userLogin}: ${score}`);
+                    const response = await host.fetchApp('backend/easter-egg', {
+                        method: 'POST',
+                        body: {
+                            userId: userLogin,
+                            score: score
+                        },
+                    });
+                    if (response ) {}
+                    
+                    console.log(`Response: ${JSON.stringify(response)}`);
+                    return true;
+                } catch (error) {
+                    console.log(`error: ${JSON.stringify(error)}`);
+                    return false;
+                }
+            }}
           />
             ) : (
               <>
@@ -97,20 +113,6 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
       </div>
     );
 };
-
-async function saveEasterEggScore(userId: string, score: number): Promise<boolean> {
-    try {
-        await host.fetchApp('backend/easter-egg', {
-            body: {
-                userId: userId,
-                score: score
-            },
-        });
-        return true;
-    } catch {
-        return false;
-    }
-}
 
 const AppComponent: React.FunctionComponent = () => {
     const [data, setData] = useState<UserCardData | null>(null);
