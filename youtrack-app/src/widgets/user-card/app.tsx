@@ -53,7 +53,6 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
             onScoreSubmit={async (score) => {
                         try {
                             const me = await host.fetchYouTrack('users/me?fields=login') as { login: string };
-                            console.log(`Submitting score for user ${me.login}: ${score}`);
                             const response = await host.fetchApp('backend/easter-egg', {
                                 method: 'POST',
                                 body: {
@@ -61,10 +60,8 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
                                     score: score
                                 },
                             });
-                            console.log(`Response: ${JSON.stringify(response)}`);
                             return true;
                         } catch (error) {
-                            console.log(`error: ${JSON.stringify(error)}`);
                             return false;
                         }
                     }}

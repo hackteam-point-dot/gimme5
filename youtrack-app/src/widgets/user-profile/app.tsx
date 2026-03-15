@@ -51,28 +51,26 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
             userId={YTApp.entity?.login}
             onClose={() => setEasterEggRevealed(false)}
             onScoreSubmit={async (score) => {
-                const userLogin = YTApp.entity?.login;
-                if (!userLogin) {
-                    return null;
-                }
-                try {
-                    console.log(`Submitting score for user ${userLogin}: ${score}`);
-                    const response = await host.fetchApp('backend/easter-egg', {
-                        method: 'POST',
-                        body: {
-                            userId: userLogin,
-                            score: score
-                        },
-                    });
-                    if (response ) {}
-                    
-                    console.log(`Response: ${JSON.stringify(response)}`);
-                    return true;
-                } catch (error) {
-                    console.log(`error: ${JSON.stringify(error)}`);
-                    return false;
-                }
-            }}
+                        const userLogin = YTApp.entity?.login;
+                        if (!userLogin) {
+                            return null;
+                        }
+                        try {
+                            const response = await host.fetchApp('backend/easter-egg', {
+                                method: 'POST',
+                                body: {
+                                    userId: userLogin,
+                                    score: score
+                                },
+                            });
+                            if (response) {
+                            }
+
+                            return true;
+                        } catch (error) {
+                            return false;
+                        }
+                    }}
           />
             ) : (
               <>
