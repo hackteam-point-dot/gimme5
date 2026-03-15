@@ -71,7 +71,6 @@ public class DashboardController(
             return Ok(leaderboard);
         }
     }
-    
 
     [HttpPost("leaderboard/reset")]
     public async Task<IActionResult> ResetLeaderboard([FromQuery] string projectId, CancellationToken ct = default)
