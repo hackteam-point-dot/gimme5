@@ -43,7 +43,8 @@ public class ProjectConfigurationController(ProjectConfigurationRepository repos
             BugResolveReward = model.BugResolveReward,
             IssueWeightFieldName = model.IssueWeightFieldName,
             PriorityMultipliers = model.PriorityMultipliers,
-            AchievementRewards = model.AchievementRewards
+            AchievementRewards = model.AchievementRewards,
+            AchievementEnabled = model.AchievementEnabled
         });
 
         return NoContent();
