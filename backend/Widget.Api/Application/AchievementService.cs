@@ -12,12 +12,16 @@ public class AchievementService(
     ProjectConfigurationRepository projectConfigurationRepository)
 {
     public record AchievementResult(string AchievementName, ulong Exp);
-    
-    public async Task<AchievementResult> CalculateAchievements(PostEventApiModel action, string userId)
+
+    public async Task<AchievementResult> CalculateAchievements(TasksRepository.TaskItem task, PostEventApiModel action,
+        string userId)
     {
+        if (task.ExpAwarded)
+            return new AchievementResult(string.Empty, 0);
+        
         var tasks = await tasksRepository.GetAllAsync();
         var config = await projectConfigurationRepository.GetByProjectIdAsync(action.ProjectKey);
-        
+
         var awardedAchievements = new List<string>();
         ulong totalExp = 0;
 
@@ -36,7 +40,7 @@ public class AchievementService(
                 totalExp += result.Exp;
             }
         }
-        
+
         return new AchievementResult(string.Join(", ", awardedAchievements), totalExp);
     }
 }

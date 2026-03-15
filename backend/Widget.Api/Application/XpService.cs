@@ -56,7 +56,7 @@ public class XpService(
                 levelUpgraded = actualLevenInfo.Level;
             await userRepository.SetXpAndLevel(user.Id, newXp, actualLevenInfo.Level);
 
-            return new(user.Xp, (ulong)taskXp, levelUpgraded);
+            return new(newXp, (ulong)taskXp, levelUpgraded);
         }
 
         return new(0, 0, null);
