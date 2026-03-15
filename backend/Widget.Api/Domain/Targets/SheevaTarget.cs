@@ -20,10 +20,14 @@ public class SheevaTarget : ITarget
         if (action.Event != EventType.BUG_IN_PROGRESS && action.Event != EventType.ISSUE_IN_PROGRESS)
             return AchievementResult.NoResult;
 
-        if (tasks.Count(x => x.Status == EventType.BUG_IN_PROGRESS || x.Status == EventType.ISSUE_IN_PROGRESS) >= 3)
+        var achievementTasks = tasks.Where(x =>
+                (x.Status == EventType.BUG_IN_PROGRESS || x.Status == EventType.ISSUE_IN_PROGRESS) && !x.ExpAwarded)
+            .ToList();
+        
+        if (achievementTasks.Count() >= 3)
         {
             var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 180;
-            return new AchievementResult(true, (ulong)reward);
+            return new AchievementResult(true, (ulong) reward, achievementTasks.Select(x => x.Id).ToArray());
         }
         
         return AchievementResult.NoResult;

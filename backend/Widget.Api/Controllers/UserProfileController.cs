@@ -35,12 +35,12 @@ public class UserProfileController(
         if (user == null)
         {
             var firstLevel = levelCalculator.FirstLevelInfo;
-            card = new UserCardApiModel(0, firstLevel.MaxXp, firstLevel.Level, achievements);
+            card = new UserCardApiModel(0, firstLevel.MaxXp, firstLevel.Level, achievements, string.Empty);
         }
         else
         {
             var levelInfo = levelCalculator.GetLevelInfo(user.Xp);
-            card = new UserCardApiModel(user.Xp, levelInfo.MaxXp, user.Level, achievements);
+            card = new UserCardApiModel(user.Xp, levelInfo.MaxXp, user.Level, achievements, user.Title);
         }
 
         return Ok(card);

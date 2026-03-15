@@ -29,18 +29,15 @@ public class EventsController(
             args.Event, taskType, args.Login, false, DateTime.UtcNow, args.Children?.ToImmutableList() ?? []));
         
         if (task?.ExpAwarded == true)
-            return Ok(null);
+            return Ok(new EventApiResponse(0, 0, null, null, 0, null));
         
         var achievementResult = await achievementService.CalculateAchievements(task!, args, args.Login);
         var actualExp = await xpService.TryAddXp(args, achievementResult.Exp);
 
-        if (actualExp.ExpChange == 0)
-            return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo,
-                achievementResult.AchievementName, achievementResult.Exp));
-        
-        await tasksRepository.SetExpAwardedAsync(args.IssueId, true);
+        if (achievementResult.Exp != 0 || actualExp.Exp != 0)
+            await tasksRepository.SetExpAwardedAsync(args.IssueId, true);
 
         return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo,
-            achievementResult.AchievementName, achievementResult.Exp));
+            achievementResult.AchievementName, achievementResult.Exp, actualExp.HeroClass));
     }
 }

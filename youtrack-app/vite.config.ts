@@ -54,6 +54,12 @@ export default defineConfig({
         target: ['es2022'],
         assetsDir: 'widgets/assets',
         rollupOptions: {
+            onwarn(warning, warn) {
+                if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && warning.message.includes('react-virtualized')) {
+                    return;
+                }
+                warn(warning);
+            },
             input: {
                 // List every widget entry point here
                 userRating: resolve(__dirname, 'src/widgets/user-dashboard/index.html'),
