@@ -1,11 +1,5 @@
-import {type Achievement} from '../user-card/types';
-
 export interface UserRating {
-  id: number;
-  username: string;
-  team: string;
-  xp: number;
-  achievements: Achievement[];
+  userId: string;
+  exp: number;
+  level: number;
 }
-
-export type {Achievement};

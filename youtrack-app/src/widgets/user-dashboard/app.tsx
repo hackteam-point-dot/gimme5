@@ -1,65 +1,83 @@
-import React, {memo} from 'react';
+import React, {memo, useEffect, useMemo, useState} from 'react';
 import Table from '@jetbrains/ring-ui-built/components/table/table';
 import Selection from '@jetbrains/ring-ui-built/components/table/selection';
 import {type Column} from '@jetbrains/ring-ui-built/components/table/header-cell';
 
 import {type EmbeddableWidgetAPI} from '../../../@types/globals';
 import {type UserRating} from './types';
-import {mockUsers} from './mock-data';
+
+const DEFAULT_LIMIT = 10;
+const DEFAULT_SKIP = 0;
 
 const host = await YTApp.register() as EmbeddableWidgetAPI;
 await host.setTitle('User Rating', '');
 
-const columns: Column<UserRating>[] = [
-  {
-    id: 'rank',
-    title: '#',
-    getValue: (item: UserRating) => mockUsers.indexOf(item) + 1,
-  },
-  {
-    id: 'username',
-    title: 'User',
-    getValue: (item: UserRating) => item.username,
-  },
-  {
-    id: 'team',
-    title: 'Team',
-    getValue: (item: UserRating) => item.team,
-  },
-  {
-    id: 'xp',
-    title: 'XP',
-    getValue: (item: UserRating) => item.xp.toLocaleString(),
-    rightAlign: true,
-  },
-  {
-    id: 'achievements',
-    title: 'Achievements',
-    getValue: (item: UserRating) => (
-      <div className="achievements">
-        {item.achievements.map(a => (
-          <div key={a.id} className="achievement-item" title={a.description}>
-            <img className="achievement-icon" src={a.imageUrl} alt={a.description} width={24} height={24}/>
-            {a.count > 1 && <span className="achievement-count">{a.count}</span>}
-          </div>
-        ))}
+async function fetchLeaderboard(): Promise<UserRating[]> {
+    try {
+        const result = await host.fetchApp('backend/leaderboard', {
+            query: {limit: String(DEFAULT_LIMIT), skip: String(DEFAULT_SKIP)}
+        });
+        return (result as UserRating[]) ?? [];
+    } catch {
+        return [];
+    }
+}
+
+function buildColumns(data: UserRating[]): Column<UserRating>[] {
+    return [
+      {
+        id: 'rank',
+        title: '#',
+        getValue: (item: UserRating) => data.indexOf(item) + 1,
+      },
+      {
+        id: 'userId',
+        title: 'User',
+        getValue: (item: UserRating) => item.userId,
+      },
+      {
+        id: 'level',
+        title: 'Level',
+        getValue: (item: UserRating) => item.level,
+      },
+      {
+        id: 'exp',
+        title: 'XP',
+        getValue: (item: UserRating) => item.exp.toLocaleString(),
+        rightAlign: true,
+      },
+    ];
+}
+
+const AppComponent: React.FunctionComponent = () => {
+    const [data, setData] = useState<UserRating[]>([]);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        fetchLeaderboard().then(result => {
+            setData(result);
+            setLoading(false);
+        });
+    }, []);
+
+    const columns = useMemo(() => buildColumns(data), [data]);
+    const selection = useMemo(() => new Selection<UserRating>({data}), [data]);
+
+    if (loading) {
+        return null;
+    }
+
+    return (
+      <div className="widget">
+        <Table
+          data={data}
+          columns={columns}
+          selection={selection}
+          selectable={false}
+          getItemKey={(item: UserRating) => item.userId}
+        />
       </div>
-    ),
-  },
-];
-
-const selection = new Selection<UserRating>({data: mockUsers});
-
-const AppComponent: React.FunctionComponent = () => (
-  <div className="widget">
-    <Table
-      data={mockUsers}
-      columns={columns}
-      selection={selection}
-      selectable={false}
-      getItemKey={(item: UserRating) => item.id}
-    />
-  </div>
-);
+    );
+};
 
 export const App = memo(AppComponent);
