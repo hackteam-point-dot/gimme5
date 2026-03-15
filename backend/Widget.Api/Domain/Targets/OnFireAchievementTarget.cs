@@ -15,7 +15,7 @@ public class OnFireTarget : ITarget
         var isEnabled = config == null || !config.AchievementEnabled.ContainsKey(Achievement) ||
                         config.AchievementEnabled[Achievement];
         
-        if (!isEnabled || action.Event != EventType.ISSUE_RESOLVED || action.Event != EventType.BUG_RESOLVED)
+        if (!isEnabled || (action.Event != EventType.ISSUE_RESOLVED && action.Event != EventType.BUG_RESOLVED))
             return AchievementResult.NoResult;
         
         var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 200;
