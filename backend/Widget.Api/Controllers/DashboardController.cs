@@ -45,17 +45,15 @@ public class DashboardController(
         }
         else
         {
-            var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(projectId, ct);
-        
-            if (currentPeriod == null)
-                currentPeriod = await leaderboardRepository.StartNewPeriod(projectId, ct);
-            
+            var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(projectId, ct) ??
+                                await leaderboardRepository.StartNewPeriod(projectId, ct);
+
             var users = await leaderboardRepository.GetLeaderboard(currentPeriod.Id, limit, skip, ct);
             var totalCount = await leaderboardRepository.GetTotalUsersCount(currentPeriod.Id, ct);
 
             var userAchievementLevelsByUserId = users
                 .ToDictionary(
-                    x => x.Key.UserId, 
+                    x => x.Key.UserId,
                     x => x.Achievements.GroupBy(y => y).ToDictionary(y => y.Key, y => y.Count()));
 
             var items = users.Select(u =>
@@ -71,5 +69,15 @@ public class DashboardController(
 
             return Ok(leaderboard);
         }
+    }
+    
+
+    [HttpPost("leaderboard/reset")]
+    public async Task<IActionResult> ResetLeaderboard([FromQuery] string projectId, CancellationToken ct = default)
+    {
+        var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(projectId, ct);
+        if (currentPeriod is not null)
+            await leaderboardRepository.ClosePeriod(currentPeriod.Id, ct);
+        return Ok();
     }
 }

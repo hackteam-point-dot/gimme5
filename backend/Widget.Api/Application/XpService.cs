@@ -14,38 +14,37 @@ public class XpService(
 {
     public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo, string? HeroClass);
 
-    public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel, AchievementService.AchievementResult achievementResult)
+    public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel,
+        AchievementService.AchievementResult achievementResult)
     {
-        var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(eventApiModel.ProjectKey);
-        
-        if (currentPeriod == null)
-            currentPeriod = await leaderboardRepository.StartNewPeriod(eventApiModel.ProjectKey);
-        
+        var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(eventApiModel.ProjectKey) ??
+                            await leaderboardRepository.StartNewPeriod(eventApiModel.ProjectKey);
+
         if (eventApiModel.Event is EventType.ISSUE_RESOLVED or EventType.BUG_RESOLVED &&
             eventApiModel.Children?.Length is null or 0)
         {
             var userAchievements = await userAchievementRepository.GetByUserIdAsync(eventApiModel.Login);
             var user = await userRepository.GetUserById(eventApiModel.Login);
-            
+
             if (user == null)
             {
                 var heroClass = heroClassesService.CalculateHeroClasses(user?.Level ?? 0,
                     userAchievements.Select(x => x.Achievement).ToImmutableList());
-                
+
                 user = new UserRepository.UserItem(eventApiModel.Login, 0, 0, heroClass, DateTime.UtcNow);
             }
-            
+
             var cfg = await projectConfigurationRepository.GetByProjectIdAsync(eventApiModel.ProjectKey);
 
-            if (cfg is null )
+            if (cfg is null)
                 return new(0, 0, null, null);
-            
+
             var taskXp = 0;
-            
+
             if (eventApiModel.Event == EventType.ISSUE_RESOLVED)
                 taskXp += cfg.IssueResolveReward;
             else if (eventApiModel.Event == EventType.BUG_RESOLVED)
-                taskXp += cfg.BugResolveReward; 
+                taskXp += cfg.BugResolveReward;
 
             if (cfg.IssueWeightType == IssueWeightType.StoryPoints &&
                 int.TryParse(eventApiModel.StoryPoints, out var storyPoints))
@@ -61,17 +60,18 @@ public class XpService(
 
             if (cfg.PriorityMultipliers.TryGetValue(eventApiModel.IssuePriority, out var priorityMultiplier))
                 taskXp = (int)(priorityMultiplier * taskXp);
-            
+
             taskXp += (int)achievementResult.Exp;
-            
+
             var newXp = user.Xp + (ulong)taskXp;
 
             int? levelUpgraded = null;
             var actualLevenInfo = levelCalculator.GetLevelInfo(newXp);
             if (actualLevenInfo.Level > user.Level)
                 levelUpgraded = actualLevenInfo.Level;
-            
-            var newUserClass = heroClassesService.CalculateHeroClasses(actualLevenInfo.Level, userAchievements.Select(x => x.Achievement).ToImmutableList());
+
+            var newUserClass = heroClassesService.CalculateHeroClasses(actualLevenInfo.Level,
+                userAchievements.Select(x => x.Achievement).ToImmutableList());
             await userRepository.SetXpAndLevel(user.Id, newXp, actualLevenInfo.Level, newUserClass);
             await leaderboardRepository.IncrementExpAndAchievement(currentPeriod.Id, user.Id, taskXp,
                 achievementResult.Achievements);
