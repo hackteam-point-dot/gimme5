@@ -52,7 +52,7 @@ builder.Services.AddScoped<ProjectConfigurationRepository>();
 builder.Services.AddScoped<LeaderboardRepository>();
 builder.Services.AddHostedService<ProjectConfigurationSeedService>();
 builder.Services.AddTransient<AchievementService>();
-builder.Services.AddTransient<XpService>();
+builder.Services.AddTransient<ExpService>();
 builder.Services.AddTransient<LevelCalculator>();
 
 builder.Services.AddTransient<ITarget, TaskBuilderTarget>();
@@ -63,6 +63,8 @@ builder.Services.AddTransient<ITarget, NightOwlTarget>();
 builder.Services.AddTransient<ITarget, SheevaTarget>();
 
 builder.Services.AddSingleton<HeroClassesService>();
+
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -76,6 +78,8 @@ app.UseCors("AllowAll");
 app.UseStaticFiles();
 
 app.MapControllers();
+
+app.MapHealthChecks("/hc");
 
 var summaries = new[]
 {

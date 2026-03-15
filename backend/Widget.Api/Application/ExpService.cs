@@ -4,7 +4,7 @@ using Widget.Api.Repositories;
 
 namespace Widget.Api.Application;
 
-public class XpService(
+public class ExpService(
     ProjectConfigurationRepository projectConfigurationRepository,
     UserRepository userRepository,
     LevelCalculator levelCalculator,
@@ -12,9 +12,9 @@ public class XpService(
     HeroClassesService heroClassesService,
     LeaderboardRepository leaderboardRepository)
 {
-    public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo, string? HeroClass);
+    public record ExpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo, string? HeroClass);
 
-    public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel,
+    public async Task<ExpAddResult> TryAddExp(PostEventApiModel eventApiModel,
         AchievementService.AchievementResult achievementResult)
     {
         var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(eventApiModel.ProjectKey) ??
@@ -82,7 +82,7 @@ public class XpService(
         return new(0, 0, null, null);
     }
 
-    private TimeSpan ParseTimeSpan(string input)
+    private static TimeSpan ParseTimeSpan(string input)
     {
         if (string.IsNullOrWhiteSpace(input))
             return TimeSpan.Zero;
