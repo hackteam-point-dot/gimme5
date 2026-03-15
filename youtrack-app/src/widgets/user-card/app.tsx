@@ -48,15 +48,15 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
       <div className="widget">
         {easterEggRevealed ? (
           <FlappyBug
-                    //userId={currentUser.id} 
+            userId={YTApp.entity?.login} 
             onClose={() => setEasterEggRevealed(false)}
             onScoreSubmit={(score) => {
-                        const userLogin = YTApp.entity?.login;
-                        if (!userLogin) {
-                            return null;
-                        }
-                        saveEasterEggScore(userLogin, score);
-                    }}
+                const userLogin = YTApp.entity?.login;
+                if (!userLogin) {
+                    return null;
+                }
+                saveEasterEggScore(userLogin, score);
+            }}
           />
             ) : (
               <>
