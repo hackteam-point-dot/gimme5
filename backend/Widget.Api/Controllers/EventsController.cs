@@ -20,7 +20,9 @@ public class EventsController(
         {
             EventType.ISSUE_RESOLVED => TasksRepository.TaskType.Issue,
             EventType.BUG_RESOLVED => TasksRepository.TaskType.Bug,
-            EventType.BUG_CREATED => TasksRepository.TaskType.Bug
+            EventType.BUG_CREATED => TasksRepository.TaskType.Bug,
+            EventType.BUG_IN_PROGRESS => TasksRepository.TaskType.Bug,
+            EventType.ISSUE_IN_PROGRESS => TasksRepository.TaskType.Issue
         };
         
         var task = await tasksRepository.CreateOrUpdateAsync(new TasksRepository.TaskItem(args.IssueId, args.ProjectKey,
@@ -29,7 +31,7 @@ public class EventsController(
         if (task?.ExpAwarded == true)
             return Ok(null);
         
-        var achievementResult = await achievementService.CalculateAchievements(args, args.Login);
+        var achievementResult = await achievementService.CalculateAchievements(task!, args, args.Login);
         var actualExp = await xpService.TryAddXp(args, achievementResult.Exp);
 
         if (actualExp.ExpChange == 0)
