@@ -25,7 +25,7 @@ public class NightOwlTarget : ITarget
         {
             var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 20;
             
-            return new AchievementResult(true, (ulong)reward);
+            return new AchievementResult(true, (ulong)reward, [action.IssueId]);
         }
 
         return AchievementResult.NoResult;

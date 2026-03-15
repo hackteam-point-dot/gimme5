@@ -46,15 +46,15 @@ exports.sendEvent = (payload) => {
   const result = JSON.parse(response.response);
   
   if (result && result.expChange){
-    workflow.message(`🎉 Earned XP for closing ticket +${result.expChange}${result.achievementExp ? (' and for getting achievement(s) +' + result.achievementExp) : ''}! 👏`);
+    workflow.message(`🎉 Earned XP for closing ticket +${result.expChange}! 👏`);
   }
   
   if (result && result.levelUpgradedTo){
-    workflow.message(`🎉 Level up to ${result.levelUpgradedTo}!`);
+    workflow.message(`🎉 Level up to ${result.levelUpgradedTo}!${!!result.heroClass? ' Now you have title ' + result.heroClass + ' 🙌' : ''}`);
   }
   
   if (result && result.achievement){
-    workflow.message(`🎉 Achievement(s) owned: ${result.achievement}!`);
+    workflow.message(`🎉 Achievement(s) owned: ${result.achievement}!`+ (result.achievementExp ? (` Earned extra XP ${result.achievementExp}!`) : ''));
   }
   
   return response;

@@ -20,6 +20,6 @@ public class TaskBuilderTarget : ITarget
 
         var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 50;
         
-        return new AchievementResult(true, (ulong)reward);
+        return new AchievementResult(true, (ulong)reward, [action.IssueId]);
     }
 }

@@ -29,7 +29,7 @@ public class EventsController(
             args.Event, taskType, args.Login, false, DateTime.UtcNow, args.Children?.ToImmutableList() ?? []));
         
         if (task?.ExpAwarded == true)
-            return Ok(null);
+            return Ok(new EventApiResponse(0, 0, null, null, 0, null));
         
         var achievementResult = await achievementService.CalculateAchievements(task!, args, args.Login);
         var actualExp = await xpService.TryAddXp(args, achievementResult);
