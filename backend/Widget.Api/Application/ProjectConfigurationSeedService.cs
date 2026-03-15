@@ -38,6 +38,7 @@ public class ProjectConfigurationSeedService(IServiceProvider serviceProvider) :
                     [Achievement.OnFire] = 200,
                     [Achievement.DeadlineHero] = 200,
                     [Achievement.BugHunter] = 100,
+                    [Achievement.NightOwl] = 100
                 }
                 
             }, cancellationToken);

@@ -1,20 +1,29 @@
 ﻿using Widget.Api.ApiModels;
+using Widget.Api.Application;
 using Widget.Api.Repositories;
 
 namespace Widget.Api.Domain.Targets;
 
-public class BugHunterTarget() : ITarget
+public class BugHunterTarget : ITarget
 {
     public Achievement Achievement => Achievement.BugHunter;
 
-    public AchievementResult Achieve(PostEventApiModel action, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
+    public AchievementResult Achieve(PostEventApiModel action, ProjectConfiguration? config,
+        IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
-        if (action.Event != EventType.BUG_RESOLVED)
-            return new AchievementResult(false, 0);
+        var isEnabled = config == null || !config.AchievementEnabled.ContainsKey(Achievement) ||
+                        config.AchievementEnabled[Achievement];
         
+        if (!isEnabled)
+            return AchievementResult.NoResult;
+
+        if (action.Event != EventType.BUG_RESOLVED)
+            return AchievementResult.NoResult;
+
+        var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 150;
         var bugsCount = tasks.Count(x => x.Type == TasksRepository.TaskType.Bug);
         var achieved = bugsCount % 5 == 0;
-        
-        return new AchievementResult(achieved, 150);
+
+        return new AchievementResult(achieved, (ulong)reward);
     }
 }

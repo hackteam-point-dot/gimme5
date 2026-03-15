@@ -7,7 +7,7 @@ namespace Widget.Api.Application;
 
 public class AchievementService(
     TasksRepository tasksRepository,
-    IEnumerable<ITarget> achievements,
+    IEnumerable<ITarget> systemAchievements,
     UserAchievementRepository userAchievementRepository,
     ProjectConfigurationRepository projectConfigurationRepository)
 {
@@ -16,13 +16,18 @@ public class AchievementService(
     public async Task<AchievementResult> CalculateAchievements(PostEventApiModel action, string userId)
     {
         var tasks = await tasksRepository.GetAllAsync();
-        //var config = projectConfigurationRepository.GetByProjectIdAsync()
+        var config = await projectConfigurationRepository.GetByProjectIdAsync(action.ProjectKey);
+        
         var awardedAchievements = new List<string>();
         ulong totalExp = 0;
 
-        foreach (var a in achievements)
+        var enabledAchievements = config != null
+            ? systemAchievements.Where(x => config.AchievementEnabled.ContainsKey(x.Achievement))
+            : systemAchievements;
+
+        foreach (var a in enabledAchievements)
         {
-            var result = a.Achieve(action, tasks);
+            var result = a.Achieve(action, config, tasks);
 
             if (result.IsAchieved)
             {
