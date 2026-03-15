@@ -51,8 +51,11 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
           //userId={currentUser.id} 
           onClose={() => setEasterEggRevealed(false)}
           onScoreSubmit={(score) => {
-            console.log(`User scored ${score}!`);
-            // Можно обновить локальный стейт пользователя здесь
+            const userLogin = YTApp.entity?.login;
+            if (!userLogin) {
+                return null;
+            }
+            saveEasterEggScore(userLogin, score);
           }}
         />
       ) : (
@@ -65,7 +68,6 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
             <ProgressBar value={data.xp} max={data.maxXp} />
           </div>
           <div className="achievements-row">
-            <span className="user-balance">Balance: {data.balance}</span>
             <div className="achievements">
               {data.achievements.map(achievement => {
                 return (
@@ -94,6 +96,20 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
     </div>
   );
 };
+
+async function saveEasterEggScore(userId: string, score: number): Promise<boolean> {
+    try {
+        await host.fetchApp('backend/easter-egg', {
+            body: {
+              userId: userId,
+              score: score 
+            },
+        });
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 const AppComponent: React.FunctionComponent = () => {
     const [data, setData] = useState<UserCardData | null>(null);

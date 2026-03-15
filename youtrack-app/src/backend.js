@@ -4,14 +4,6 @@ exports.httpHandler = {
   endpoints: [
     {
       method: 'GET',
-      path: 'debug',
-      handle: function handle(ctx) {
-        const requestParam = ctx.request.getParameter('test');
-        ctx.response.json({test: requestParam});
-      }
-    },
-    {
-      method: 'GET',
       path: 'leaderboard',
       handle: function handle(ctx) {
         const limit = ctx.request.getParameter('limit');
@@ -52,6 +44,17 @@ exports.httpHandler = {
         var connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
         connection.addHeader({name: 'Content-Type', value: 'application/json'});
         var response = connection.putSync('/api/ProjectConfiguration', [], body);
+        ctx.response.json(JSON.parse(response.response));
+      }
+    },
+    {
+      method: 'POST',
+      path: 'easter-egg',
+      handle: function handle(ctx) {
+        var body = ctx.request.body;
+        var connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
+        connection.addHeader({name: 'Content-Type', value: 'application/json'});
+        var response = connection.postSync('/api/events/flappy-bird', [], body);
         ctx.response.json(JSON.parse(response.response));
       }
     }
