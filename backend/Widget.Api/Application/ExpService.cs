@@ -17,13 +17,13 @@ public class ExpService(
     public async Task<ExpAddResult> TryAddExp(PostEventApiModel eventApiModel,
         AchievementService.AchievementResult achievementResult)
     {
-        var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(eventApiModel.ProjectKey) ??
+        var currentPeriod = await leaderboardRepository.GetCurrentPeriod(eventApiModel.ProjectKey) ??
                             await leaderboardRepository.StartNewPeriod(eventApiModel.ProjectKey);
 
         if (eventApiModel.Event is EventType.ISSUE_RESOLVED or EventType.BUG_RESOLVED &&
             eventApiModel.Children?.Length is null or 0)
         {
-            var userAchievements = await userAchievementRepository.GetByUserIdAsync(eventApiModel.Login);
+            var userAchievements = await userAchievementRepository.GetByUserId(eventApiModel.Login);
             var user = await userRepository.GetUserById(eventApiModel.Login);
 
             if (user == null)
@@ -34,7 +34,7 @@ public class ExpService(
                 user = new UserRepository.UserItem(eventApiModel.Login, 0, 0, heroClass, DateTime.UtcNow);
             }
 
-            var cfg = await projectConfigurationRepository.GetByProjectIdAsync(eventApiModel.ProjectKey);
+            var cfg = await projectConfigurationRepository.GetByProjectId(eventApiModel.ProjectKey);
 
             if (cfg is null)
                 return new(0, 0, null, null);

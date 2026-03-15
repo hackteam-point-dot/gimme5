@@ -12,7 +12,7 @@ public class ProjectConfigurationController(ProjectConfigurationRepository repos
     [HttpGet]
     public async Task<ActionResult<ProjectConfigurationApiModel>> GetConfiguration([FromQuery] string projectId)
     {
-        var config = await repository.GetByProjectIdAsync(projectId);
+        var config = await repository.GetByProjectId(projectId);
 
         if (config == null)
         {
@@ -34,7 +34,7 @@ public class ProjectConfigurationController(ProjectConfigurationRepository repos
     [HttpPut]
     public async Task<IActionResult> UpdateConfiguration([FromBody] ProjectConfigurationApiModel model)
     {
-        await repository.UpsertAsync(new ProjectConfiguration
+        await repository.Upsert(new ProjectConfiguration
         {
             ProjectId = model.ProjectId,
             IssueWeightType = model.IssueWeightType,

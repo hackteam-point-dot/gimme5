@@ -25,7 +25,7 @@ public class EventsController(
             EventType.ISSUE_IN_PROGRESS => TasksRepository.TaskType.Issue
         };
         
-        var task = await tasksRepository.CreateOrUpdateAsync(new TasksRepository.TaskItem(args.IssueId, args.ProjectKey,
+        var task = await tasksRepository.CreateOrUpdate(new TasksRepository.TaskItem(args.IssueId, args.ProjectKey,
             args.Event, taskType, args.Login, false, DateTime.UtcNow, args.Children?.ToImmutableList() ?? []));
         
         if (task?.ExpAwarded == true)
@@ -35,7 +35,7 @@ public class EventsController(
         var actualExp = await expService.TryAddExp(args, achievementResult);
 
         if (achievementResult.Exp != 0 || actualExp.Exp != 0)
-            await tasksRepository.SetExpAwardedAsync(args.IssueId, true);
+            await tasksRepository.SetExpAwarded(args.IssueId, true);
 
         return Ok(new EventApiResponse(actualExp.Exp, actualExp.ExpChange, actualExp.LevelUpgradedTo,
             achievementResult.AchievementName, achievementResult.Exp, actualExp.HeroClass));

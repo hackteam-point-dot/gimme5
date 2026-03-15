@@ -21,8 +21,8 @@ public class AchievementService(
         if (task.ExpAwarded)
             return new AchievementResult(string.Empty, 0, [], []);
 
-        var tasks = await tasksRepository.GetAllAsync();
-        var config = await projectConfigurationRepository.GetByProjectIdAsync(action.ProjectKey);
+        var tasks = await tasksRepository.GetAll();
+        var config = await projectConfigurationRepository.GetByProjectId(action.ProjectKey);
 
         var awardedAchievements = new List<Achievement>();
         ulong totalExp = 0;
@@ -34,7 +34,7 @@ public class AchievementService(
 
             if (result.IsAchieved)
             {
-                await userAchievementRepository.CreateOrUpdateAsync(userId, a.Achievement);
+                await userAchievementRepository.CreateOrUpdate(userId, a.Achievement);
                 awardedAchievements.Add(a.Achievement);
                 totalExp += result.Exp;
                 taskIds.AddRange(result.TaskIds);
@@ -52,7 +52,7 @@ public class AchievementService(
             var result = achievement.IsAchieved(userId, score);
             if (result.IsAchieved)
             {
-                await userAchievementRepository.CreateOrUpdateAsync(userId, achievement.Achievement);
+                await userAchievementRepository.CreateOrUpdate(userId, achievement.Achievement);
                 return result.IsAchieved;
             }
         }

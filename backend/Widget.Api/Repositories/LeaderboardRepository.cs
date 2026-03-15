@@ -19,9 +19,18 @@ public class LeaderboardRepository(IMongoDatabase database)
     private readonly IMongoCollection<LeaderboardItem> _itemsCollection =
         database.GetCollection<LeaderboardItem>("LeaderboardItems");
 
-    public async Task<LeaderboardPeriod?> GetCurrentPeriodAsync(string projectId, CancellationToken ct = default)
+    public async Task<LeaderboardPeriod?> GetCurrentPeriod(string projectId, CancellationToken ct = default)
     {
         return await _periodsCollection.Find(p => p.ProjectId == projectId && p.IsCurrent).FirstOrDefaultAsync(ct);
+    }
+
+    public async Task<LeaderboardPeriod?> GetPreviousPeriod(string projectId, CancellationToken ct = default)
+    {
+        return await _periodsCollection
+            .Find(p => p.ProjectId == projectId && p.IsCurrent == false)
+            .Sort(Builders<LeaderboardPeriod>.Sort.Descending(p => p.Start))
+            .Limit(1)
+            .FirstOrDefaultAsync(ct);
     }
 
     public async Task ClosePeriod(ObjectId periodId, CancellationToken ct = default)
