@@ -1,6 +1,6 @@
 import React, {memo, useEffect, useState} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
-import {type UserCardData} from './types';
+import {type Achievement, type UserCardData} from './types';
 
 const host = await YTApp.register();
 
@@ -21,36 +21,77 @@ interface UserCardProps {
     data: UserCardData;
 }
 
-const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
-  <div className="widget">
-    <div className="level-row">
-      <div className="level-header">
-        <span className="level-label">Level {data.level}</span>
-        <span className="level-xp">{data.xp} / {data.maxXp}</span>
-      </div>
-      <ProgressBar value={data.xp} max={data.maxXp}/>
-    </div>
-    <div className="achievements-row">
-      <span className="user-balance">Balance: {data.balance}</span>
-      <div className="achievements">
-        {data.achievements.map(achievement => (
-          <div key={achievement.id} className="achievement-item" title={achievement.description}>
-            <img
-              className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
-              src={achievement.imageUrl}
-              alt={achievement.description}
-              width={32}
-              height={32}
-            />
-            {achievement.count > 1 && (
-            <span className="achievement-count">x{achievement.count}</span>
-                        )}
-          </div>
-                ))}
-      </div>
-    </div>
+const AchievementSecret: React.FunctionComponent<{achievement: Achievement}> = ({achievement}) => (
+  <div className="achievement-secret">
+    <span className="achievement-secret-title">🎉 Secret unlocked!</span>
+    <span className="achievement-secret-description">{achievement.description}</span>
   </div>
 );
+
+const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
+  const [clickCounts, setClickCounts] = useState<Record<number, number>>({});
+  const [revealedAchievementIds, setRevealedAchievementIds] = useState<Set<number>>(new Set());
+
+  const handleAchievementClick = (achievement: Achievement) => {
+    setClickCounts(prev => {
+      const prevCount = prev[achievement.id] ?? 0;
+      const nextCount = prevCount + 1;
+      const next = {...prev, [achievement.id]: nextCount};
+
+      if (nextCount === 5) {
+        setRevealedAchievementIds(prevSet => new Set(prevSet).add(achievement.id));
+      }
+
+      return next;
+    });
+  };
+
+  return (
+    <div className="widget">
+      <div className="level-row">
+        <div className="level-header">
+          <span className="level-label">Level {data.level}</span>
+          <span className="level-xp">{data.xp} / {data.maxXp}</span>
+        </div>
+        <ProgressBar value={data.xp} max={data.maxXp}/>
+      </div>
+      <div className="achievements-row">
+        <span className="user-balance">Balance: {data.balance}</span>
+        <div className="achievements">
+          {data.achievements.map(achievement => {
+            const revealed = revealedAchievementIds.has(achievement.id);
+
+            return (
+              <div
+                key={achievement.id}
+                className="achievement-item"
+                title={achievement.description}
+                onClick={() => handleAchievementClick(achievement)}
+              >
+                {revealed ? (
+                  <AchievementSecret achievement={achievement}/>
+                ) : (
+                  <>
+                    <img
+                      className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
+                      src={achievement.imageUrl}
+                      alt={achievement.description}
+                      width={32}
+                      height={32}
+                    />
+                    {achievement.count > 1 && (
+                      <span className="achievement-count">x{achievement.count}</span>
+                    )}
+                  </>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const AppComponent: React.FunctionComponent = () => {
     const [data, setData] = useState<UserCardData | null>(null);
