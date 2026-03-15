@@ -48,30 +48,26 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
       <div className="widget">
         {easterEggRevealed ? (
           <FlappyBug
-            userId={YTApp.entity?.login} 
+            userId={YTApp.entity?.login}
             onClose={() => setEasterEggRevealed(false)}
             onScoreSubmit={async (score) => {
-
-              const userLogin = YTApp.entity?.login;
-              if (!userLogin) {
-                  return null;
-              }
-              try {
-                  console.log(`Submitting score for user ${userLogin}: ${score}`);
-                  const response = await host.fetchApp('backend/easter-egg', {
-                      method: 'POST',
-                      body: {
-                          userId: userLogin,
-                          score: score
-                      },
-                  });
-                  console.log(`Response: ${JSON.stringify(response)}`);
-                  return true;
-              } catch (error) {
-                  console.log(`error: ${JSON.stringify(error)}`);
-                  return false;
-              }
-            }}
+                        try {
+                            const me = await host.fetchYouTrack('users/me?fields=login') as { login: string };
+                            console.log(`Submitting score for user ${me.login}: ${score}`);
+                            const response = await host.fetchApp('backend/easter-egg', {
+                                method: 'POST',
+                                body: {
+                                    userId: me.login,
+                                    score: score
+                                },
+                            });
+                            console.log(`Response: ${JSON.stringify(response)}`);
+                            return true;
+                        } catch (error) {
+                            console.log(`error: ${JSON.stringify(error)}`);
+                            return false;
+                        }
+                    }}
           />
             ) : (
               <>
