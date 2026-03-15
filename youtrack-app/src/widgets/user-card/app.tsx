@@ -69,7 +69,8 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
                   });
                   console.log(`Response: ${JSON.stringify(response)}`);
                   return true;
-              } catch {
+              } catch (error) {
+                  console.log(`error: ${JSON.stringify(error)}`);
                   return false;
               }
             }}
