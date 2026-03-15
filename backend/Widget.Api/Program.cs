@@ -49,6 +49,7 @@ builder.Services.AddScoped<UserAchievementRepository>();
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<TasksRepository>();
 builder.Services.AddScoped<ProjectConfigurationRepository>();
+builder.Services.AddScoped<LeaderboardRepository>();
 builder.Services.AddHostedService<ProjectConfigurationSeedService>();
 builder.Services.AddTransient<AchievementService>();
 builder.Services.AddTransient<XpService>();

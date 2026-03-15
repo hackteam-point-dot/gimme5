@@ -53,4 +53,19 @@ public class LeaderboardRepository(IMongoDatabase database)
         await _itemsCollection.UpdateOneAsync(x => x.Key == key, update, new UpdateOptions { IsUpsert = true },
             cancellationToken: ct);
     }
+
+    public async Task<List<LeaderboardItem>> GetLeaderboard(ObjectId periodId, int limit, int skip,
+        CancellationToken ct = default)
+    {
+        return await _itemsCollection.Find(x => x.Key.PeriodId == periodId)
+            .SortByDescending(x => x.Exp)
+            .Skip(skip)
+            .Limit(limit)
+            .ToListAsync(ct);
+    }
+    
+    public async Task<long> GetTotalUsersCount(ObjectId periodId, CancellationToken ct = default)
+    {
+        return await _itemsCollection.CountDocumentsAsync(x => x.Key.PeriodId == periodId, cancellationToken: ct);
+    }
 }

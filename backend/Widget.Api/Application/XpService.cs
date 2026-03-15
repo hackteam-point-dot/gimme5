@@ -9,12 +9,18 @@ public class XpService(
     UserRepository userRepository,
     LevelCalculator levelCalculator,
     UserAchievementRepository userAchievementRepository,
-    HeroClassesService heroClassesService)
+    HeroClassesService heroClassesService,
+    LeaderboardRepository leaderboardRepository)
 {
     public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo, string? HeroClass);
 
     public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel, ulong achievementReward)
     {
+        var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(eventApiModel.ProjectKey);
+        
+        if (currentPeriod == null)
+            currentPeriod = await leaderboardRepository.StartNewPeriod(eventApiModel.ProjectKey);
+        
         if (eventApiModel.Event is EventType.ISSUE_RESOLVED or EventType.BUG_RESOLVED &&
             eventApiModel.Children?.Length is null or 0)
         {
