@@ -24,8 +24,6 @@ public class ProjectConfiguration
     
     [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfDocuments)]
     public Dictionary<Achievement, bool> AchievementEnabled { get; init; } = new();
-
-    public bool HideUnreachedAchievements { get; set; }
 }
 
 public enum IssueWeightType

@@ -1,5 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+﻿using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using Widget.Api.Domain;
 
@@ -7,9 +6,12 @@ namespace Widget.Api.Repositories;
 
 public class UserAchievementRepository(IMongoDatabase database)
 {
+    public record UserAchievementKey(string UserId, Achievement Achievement);
+    
+    [BsonIgnoreExtraElements]
     public record UserAchievementItem(
         [property: BsonId]
-        string Id,
+        UserAchievementKey Key,
         Achievement Achievement,
         int Level,
         DateTime DateCreated);
@@ -19,13 +21,13 @@ public class UserAchievementRepository(IMongoDatabase database)
 
     public async Task<UserAchievementItem> CreateOrUpdateAsync(string userId, Achievement achievement, CancellationToken cancellationToken = default)
     {
-        var id = $"{userId}:{achievement}";
+        var key = new UserAchievementKey(userId, achievement);
 
-        var filter = Builders<UserAchievementItem>.Filter.Eq(x => x.Id, id);
+        var filter = Builders<UserAchievementItem>.Filter.Eq(x => x.Key, key);
 
         var update = Builders<UserAchievementItem>.Update
             .Inc(x => x.Level, 1)
-            .SetOnInsert(x => x.Id, id)
+            .SetOnInsert(x => x.Key, key)
             .SetOnInsert(x => x.Achievement, achievement)
             .SetOnInsert(x => x.DateCreated, DateTime.UtcNow);
 
@@ -36,5 +38,11 @@ public class UserAchievementRepository(IMongoDatabase database)
         };
 
         return await _collection.FindOneAndUpdateAsync(filter, update, options, cancellationToken);
+    }
+    
+    public async Task<List<UserAchievementItem>> GetByUserIdAsync(string userId, CancellationToken ct = default)
+    {
+        return await _collection.Find(x => x.Key.UserId == userId)
+            .ToListAsync(ct);
     }
 }

@@ -28,6 +28,9 @@ builder.Services.AddControllers()
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+var testStr = builder.Configuration["MongoDb:ConnectionString"];
+Console.WriteLine(testStr);
+
 builder.Services.AddSingleton<IMongoClient>(_ =>
 {
     var connectionString = builder.Configuration["CUSTOMCONNSTR_MONGO"]
