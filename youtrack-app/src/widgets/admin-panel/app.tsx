@@ -66,6 +66,7 @@ const AppComponent: React.FunctionComponent = () => {
     const [config, setConfig] = useState<ProjectConfiguration | null>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [resetProgress, setResetProgress] = useState(false);
 
     useEffect(() => {
         (async () => {
@@ -92,6 +93,16 @@ const AppComponent: React.FunctionComponent = () => {
     const handleSave = async () => {
         setSaving(true);
         const success = await saveConfig(config);
+
+        if (resetProgress) {
+            try {
+                await fetch('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/api/Dashboard/leaderboard/reset?projectId=SCR');
+                setResetProgress(false);
+            } catch {
+                // reset failed
+            }
+        }
+
         setSaving(false);
         host.alert(
             success ? 'Конфигурация успешно сохранена!' : 'Ошибка при сохранении конфигурации.',
@@ -269,6 +280,18 @@ const AppComponent: React.FunctionComponent = () => {
                   </div>
                 </div>
                         ))}
+            </div>
+
+            {/* Очистка данных */}
+            <div>
+              <h4 className="section-header">Очистка данных</h4>
+              <div className="config-row">
+                <Checkbox
+                  checked={resetProgress}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setResetProgress(e.target.checked)}
+                  label="Сбросить прогресс накопления"
+                />
+              </div>
             </div>
 
             {/* Save */}
