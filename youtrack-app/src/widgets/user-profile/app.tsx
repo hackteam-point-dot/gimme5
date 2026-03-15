@@ -11,7 +11,6 @@ async function fetchUserCardData(): Promise<UserCardData | null> {
         if (!userLogin) {
             return null;
         }
-        console.log(`Fetching user card data for user: ${userLogin}`);
 
         return await host.fetchApp('backend/user-card', {query: {userId: userLogin}}) as UserCardData;
     } catch {
@@ -119,7 +118,6 @@ const AppComponent: React.FunctionComponent = () => {
 
     useEffect(() => {
         fetchUserCardData().then(result => {
-            console.log('Fetched user card data:', result);
             setData(result);
             setLoading(false);
         });

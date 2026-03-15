@@ -1,6 +1,6 @@
 .widget {
     margin: calc(var(--ring-unit) / 2);
-    margin-left: calc(var(--ring-unit) * 2);
+    margin-left: calc(var(--ring-unit) * 4);
     max-width: 500px;
 }
 
