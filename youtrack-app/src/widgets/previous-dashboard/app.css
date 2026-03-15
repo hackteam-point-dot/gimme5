@@ -1,0 +1,37 @@
+.widget {
+  margin: calc(var(--ring-unit) / 2);
+}
+
+.achievements {
+  display: flex;
+  flex-wrap: wrap;
+  gap: calc(var(--ring-unit) / 2);
+}
+
+.achievement-item {
+  position: relative;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.achievement-icon {
+  display: block;
+  border-radius: var(--ring-border-radius-small);
+}
+
+.achievement-count {
+  position: absolute;
+  bottom: -2px;
+  right: -4px;
+  min-width: 14px;
+  height: 14px;
+  padding: 0 3px;
+  border-radius: 7px;
+  background: var(--ring-main-color);
+  color: var(--ring-white-text-color);
+  font-size: 9px;
+  font-weight: bold;
+  line-height: 14px;
+  text-align: center;
+  box-sizing: border-box;
+}

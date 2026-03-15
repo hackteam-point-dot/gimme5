@@ -42,10 +42,18 @@
       "description": "Configuration panel for GiveMeFive project settings (admin only)"
     },
     {
+      "key": "gimme5_previous_rating",
+      "name": "GiveMeFive previous sprint leaderboard",
+      "indexPath": "previous-dashboard/index.html",
+      "extensionPoint": "DASHBOARD_WIDGET",
+      "iconPath": "previous-dashboard/widget-icon.svg",
+      "description": "Shows previous sprint leaderboard in GiveMeFive system"
+    },
+    {
       "key": "gimme5_user_profile",
       "name": "GiveMeFive",
       "indexPath": "user-profile/index.html",
-      "extensionPoint": "USER_PROFILE_SETTINGS",
+      "extensionPoint": "UER_PROFILE_SETTINGS",
       "iconPath": "user-profile/widget-icon.svg",
       "description": "Shows user profile in GiveMeFive system"
     }
