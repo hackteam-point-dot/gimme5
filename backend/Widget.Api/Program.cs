@@ -28,12 +28,9 @@ builder.Services.AddControllers()
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-var testStr = builder.Configuration["MongoDb:ConnectionString"];
-Console.WriteLine(testStr);
-
 builder.Services.AddSingleton<IMongoClient>(_ =>
 {
-    var connectionString = builder.Configuration["CUSTOMCONNSTR_MONGO"]
+    var connectionString = builder.Configuration["MongoDb:ConnectionString"]
                            ?? throw new InvalidOperationException("Connection string 'MongoDb' is not configured.");
 
     return new MongoClient(connectionString);
