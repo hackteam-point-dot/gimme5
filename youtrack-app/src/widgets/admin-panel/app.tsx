@@ -7,14 +7,12 @@ import Input from '@jetbrains/ring-ui-built/components/input/input';
 import Select from '@jetbrains/ring-ui-built/components/select/select';
 import Checkbox from '@jetbrains/ring-ui-built/components/checkbox/checkbox';
 
-import {type EmbeddableWidgetAPI} from '../../../@types/globals';
+import {type HostAPI} from '../../../@types/globals';
 import {type ProjectConfiguration} from './types';
 import './app.css';
 
-const PROJECT_ID = 'SCR';
-
-const host = await YTApp.register() as EmbeddableWidgetAPI;
-await host.setTitle('GiveMeFive Config Panel', '');
+const host = await YTApp.register() as HostAPI;
+const PROJECT_ID = YTApp.entity!.id;
 
 const WEIGHT_TYPE_OPTIONS = [
   {key: 'None', label: 'Не учитывать (Выкл)'},
@@ -42,15 +40,6 @@ const ACHIEVEMENT_LABELS: Record<string, string> = {
   Sheeva: '💪 Sheeva',
 };
 
-async function checkIsAdmin(): Promise<boolean> {
-  try {
-    await host.fetchYouTrack(`api/admin/projects/${PROJECT_ID}?fields=id`);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
 async function fetchConfig(): Promise<ProjectConfiguration | null> {
   try {
     return await host.fetchApp('backend/project-configuration', {
@@ -74,35 +63,20 @@ async function saveConfig(config: ProjectConfiguration): Promise<boolean> {
 }
 
 const AppComponent: React.FunctionComponent = () => {
-  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [config, setConfig] = useState<ProjectConfiguration | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     (async () => {
-      const admin = await checkIsAdmin();
-      setIsAdmin(admin);
-      if (admin) {
-        const data = await fetchConfig();
-        setConfig(data);
-      }
+      const data = await fetchConfig();
+      setConfig(data);
       setLoading(false);
     })();
   }, []);
 
   if (loading) {
     return null;
-  }
-
-  if (!isAdmin) {
-    return (
-      <Island>
-        <Content>
-          <div className="access-denied">Доступ запрещён. Этот виджет доступен только администраторам проекта.</div>
-        </Content>
-      </Island>
-    );
   }
 
   if (!config) {

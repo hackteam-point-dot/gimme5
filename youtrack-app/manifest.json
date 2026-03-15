@@ -45,7 +45,7 @@
       "key": "gimme5_admin_panel",
       "name": "GiveMeFive Admin Panel",
       "indexPath": "admin-panel/index.html",
-      "extensionPoint": "DASHBOARD_WIDGET",
+      "extensionPoint": "PROJECT_SETTINGS",
       "iconPath": "admin-panel/widget-icon.svg",
       "description": "Configuration panel for GiveMeFive project settings (admin only)"
     }
