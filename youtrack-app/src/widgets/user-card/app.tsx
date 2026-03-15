@@ -50,12 +50,12 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
           <FlappyBug
             userId={YTApp.entity?.login} 
             onClose={() => setEasterEggRevealed(false)}
-            onScoreSubmit={(score) => {
+            onScoreSubmit={async (score) => {
                 const userLogin = YTApp.entity?.login;
                 if (!userLogin) {
                     return null;
                 }
-                saveEasterEggScore(userLogin, score);
+                await saveEasterEggScore(userLogin, score);
             }}
           />
             ) : (
@@ -100,12 +100,14 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
 
 async function saveEasterEggScore(userId: string, score: number): Promise<boolean> {
     try {
-        await host.fetchApp('backend/easter-egg', {
+        console.log(`Submitting score for user ${userId}: ${score}`);
+        const response = await host.fetchApp('backend/easter-egg', {
             body: {
                 userId: userId,
                 score: score
             },
         });
+        console.log(`Response: ${JSON.stringify(response)}`);
         return true;
     } catch {
         return false;
