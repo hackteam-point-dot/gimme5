@@ -54,12 +54,19 @@ export default defineConfig({
         target: ['es2022'],
         assetsDir: 'widgets/assets',
         rollupOptions: {
+            onwarn(warning, warn) {
+                if (warning.code === 'MODULE_LEVEL_DIRECTIVE' && warning.message.includes('react-virtualized')) {
+                    return;
+                }
+                warn(warning);
+            },
             input: {
                 // List every widget entry point here
                 userRating: resolve(__dirname, 'src/widgets/user-dashboard/index.html'),
                 userCard: resolve(__dirname, 'src/widgets/user-card/index.html'),
                 teamRating: resolve(__dirname, 'src/widgets/team-dashboard/index.html'),
                 gimme5: resolve(__dirname, 'src/widgets/gimme5/index.html'),
+                adminPanel: resolve(__dirname, 'src/widgets/admin-panel/index.html'),
             }
         }
     }

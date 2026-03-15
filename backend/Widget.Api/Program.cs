@@ -61,6 +61,8 @@ builder.Services.AddTransient<ITarget, BugHunterTarget>();
 builder.Services.AddTransient<ITarget, NightOwlTarget>();
 builder.Services.AddTransient<ITarget, SheevaTarget>();
 
+builder.Services.AddSingleton<HeroClassesService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

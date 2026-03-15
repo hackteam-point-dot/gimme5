@@ -10,4 +10,5 @@ public record UserCardApiModel(
     ulong Xp,
     ulong MaxXp,
     int Level,
-    UserAchievementApiModel[] Achievements);
+    UserAchievementApiModel[] Achievements,
+    string HeroClass);

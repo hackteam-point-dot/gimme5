@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using Widget.Api.ApiModels;
 using Widget.Api.Repositories;
 
@@ -6,23 +7,32 @@ namespace Widget.Api.Application;
 public class XpService(
     ProjectConfigurationRepository projectConfigurationRepository,
     UserRepository userRepository,
-    LevelCalculator levelCalculator)
+    LevelCalculator levelCalculator,
+    UserAchievementRepository userAchievementRepository,
+    HeroClassesService heroClassesService)
 {
-    public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo);
+    public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo, string? HeroClass);
 
     public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel, ulong achievementReward)
     {
         if (eventApiModel.Event is EventType.ISSUE_RESOLVED or EventType.BUG_RESOLVED &&
             eventApiModel.Children?.Length is null or 0)
         {
+            var userAchievements = await userAchievementRepository.GetByUserIdAsync(eventApiModel.Login);
+            var user = await userRepository.GetUserById(eventApiModel.Login);
+            
+            if (user == null)
+            {
+                var heroClass = heroClassesService.CalculateHeroClasses(user?.Level ?? 0,
+                    userAchievements.Select(x => x.Achievement).ToImmutableList());
+                
+                user = new UserRepository.UserItem(eventApiModel.Login, 0, 0, heroClass, DateTime.UtcNow);
+            }
+            
             var cfg = await projectConfigurationRepository.GetByProjectIdAsync(eventApiModel.ProjectKey);
 
-            var user = await userRepository.GetUserById(eventApiModel.Login);
-
             if (cfg is null )
-                return new(0, 0, null);
-
-            user ??= new UserRepository.UserItem(eventApiModel.Login, 0, 0, DateTime.UtcNow);
+                return new(0, 0, null, null);
             
             var taskXp = 0;
             
@@ -54,12 +64,14 @@ public class XpService(
             var actualLevenInfo = levelCalculator.GetLevelInfo(newXp);
             if (actualLevenInfo.Level > user.Level)
                 levelUpgraded = actualLevenInfo.Level;
-            await userRepository.SetXpAndLevel(user.Id, newXp, actualLevenInfo.Level);
+            
+            var newUserClass = heroClassesService.CalculateHeroClasses(actualLevenInfo.Level, userAchievements.Select(x => x.Achievement).ToImmutableList());
+            await userRepository.SetXpAndLevel(user.Id, newXp, actualLevenInfo.Level, newUserClass);
 
-            return new(newXp, (ulong)taskXp, levelUpgraded);
+            return new(newXp, (ulong)taskXp, levelUpgraded, newUserClass);
         }
 
-        return new(0, 0, null);
+        return new(0, 0, null, null);
     }
 
     private TimeSpan ParseTimeSpan(string input)
