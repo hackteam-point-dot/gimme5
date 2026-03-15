@@ -50,12 +50,12 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
           <FlappyBug
             userId={YTApp.entity?.login} 
             onClose={() => setEasterEggRevealed(false)}
-            onScoreSubmit={(score) => {
+            onScoreSubmit={async (score) => {
                 const userLogin = YTApp.entity?.login;
                 if (!userLogin) {
                     return null;
                 }
-                saveEasterEggScore(userLogin, score);
+                await saveEasterEggScore(userLogin, score);
             }}
           />
             ) : (
