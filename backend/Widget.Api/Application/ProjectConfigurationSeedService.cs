@@ -13,11 +13,11 @@ public class ProjectConfigurationSeedService(IServiceProvider serviceProvider) :
         using var scope = serviceProvider.CreateScope();
         var repository = scope.ServiceProvider.GetRequiredService<ProjectConfigurationRepository>();
 
-        var config = await repository.GetByProjectIdAsync(ProjectId, cancellationToken);
+        var config = await repository.GetByProjectId(ProjectId, cancellationToken);
 
         if (config == null)
         {
-            await repository.UpsertAsync(new ProjectConfiguration
+            await repository.Upsert(new ProjectConfiguration
             {
                 ProjectId = ProjectId,
                 IssueWeightType = IssueWeightType.StoryPoints,

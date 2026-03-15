@@ -19,7 +19,7 @@ public class UserAchievementRepository(IMongoDatabase database)
     private readonly IMongoCollection<UserAchievementItem> _collection =
         database.GetCollection<UserAchievementItem>("UserAchievements");
 
-    public async Task<UserAchievementItem> CreateOrUpdateAsync(string userId, Achievement achievement, CancellationToken cancellationToken = default)
+    public async Task<UserAchievementItem> CreateOrUpdate(string userId, Achievement achievement, CancellationToken cancellationToken = default)
     {
         var key = new UserAchievementKey(userId, achievement);
 
@@ -40,7 +40,7 @@ public class UserAchievementRepository(IMongoDatabase database)
         return await _collection.FindOneAndUpdateAsync(filter, update, options, cancellationToken);
     }
     
-    public async Task<List<UserAchievementItem>> GetByUserIdAsync(string userId, CancellationToken ct = default)
+    public async Task<List<UserAchievementItem>> GetByUserId(string userId, CancellationToken ct = default)
     {
         return await _collection.Find(x => x.Key.UserId == userId)
             .ToListAsync(ct);
