@@ -118,6 +118,7 @@ const AppComponent: React.FunctionComponent = () => {
 
     useEffect(() => {
         fetchUserCardData().then(result => {
+            console.log('Fetched user card data:', result);
             setData(result);
             setLoading(false);
         });

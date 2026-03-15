@@ -43,7 +43,7 @@
     },
     {
       "key": "gimme5_user_profile",
-      "name": "GiveMeFive user profile",
+      "name": "GiveMeFive",
       "indexPath": "user-profile/index.html",
       "extensionPoint": "USER_PROFILE_SETTINGS",
       "iconPath": "user-profile/widget-icon.svg",
