@@ -1,4 +1,5 @@
 ﻿using Widget.Api.ApiModels;
+using Widget.Api.Application;
 using Widget.Api.Domain;
 using Widget.Api.Repositories;
 
@@ -8,13 +9,21 @@ public class OnFireTarget : ITarget
 {
     public Achievement Achievement => Achievement.OnFire;
 
-    public AchievementResult Achieve(PostEventApiModel action, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
+    public AchievementResult Achieve(PostEventApiModel action, ProjectConfiguration? config,
+        IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
+        var isEnabled = config == null || !config.AchievementEnabled.ContainsKey(Achievement) ||
+                        config.AchievementEnabled[Achievement];
+        
+        if (!isEnabled || action.Event != EventType.ISSUE_RESOLVED || action.Event != EventType.BUG_RESOLVED)
+            return AchievementResult.NoResult;
+        
+        var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 200;
         var achieved = tasks
             .Where(t => t.ResolverId == action.Login && t.DateResolved.HasValue)
             .GroupBy(t => t.DateResolved!.Value.Date)
             .Any(g => g.Count() >= 5);
 
-        return new AchievementResult(achieved, achieved ? 200 : 0UL);
+        return new AchievementResult(achieved, achieved ? (ulong)reward : 0UL);
     }
 }

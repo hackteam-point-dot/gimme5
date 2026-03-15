@@ -1,13 +1,36 @@
+const http = require('@jetbrains/youtrack-scripting-api/http');
+
 exports.httpHandler = {
   endpoints: [
     {
       method: 'GET',
       path: 'debug',
       handle: function handle(ctx) {
-        // See https://www.jetbrains.com/help/youtrack/devportal-apps/apps-reference-http-handlers.html#request
         const requestParam = ctx.request.getParameter('test');
-        // See https://www.jetbrains.com/help/youtrack/devportal-apps/apps-reference-http-handlers.html#response
         ctx.response.json({test: requestParam});
+      }
+    },
+    {
+      method: 'GET',
+      path: 'leaderboard',
+      handle: function handle(ctx) {
+        const limit = ctx.request.getParameter('limit');
+        const skip = ctx.request.getParameter('skip');
+        const connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
+        connection.addHeader({name: 'Content-Type', value: 'application/json'});
+        const response = connection.getSync('/api/Dashboard/leaderboard?limit=' + encodeURIComponent(limit) + '&skip=' + encodeURIComponent(skip), '');
+        ctx.response.json(JSON.parse(response.response));
+      }
+    },
+    {
+      method: 'GET',
+      path: 'user-card',
+      handle: function handle(ctx) {
+        const userId = ctx.request.getParameter('userId');
+        const connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
+        connection.addHeader({name: 'Content-Type', value: 'application/json'});
+        const response = connection.getSync('/api/UserProfile/card?userId=' + encodeURIComponent(userId), '');
+        ctx.response.json(JSON.parse(response.response));
       }
     }
   ]
