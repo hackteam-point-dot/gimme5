@@ -1,4 +1,5 @@
 ﻿using Widget.Api.ApiModels;
+using Widget.Api.Application;
 using Widget.Api.Domain;
 using Widget.Api.Repositories;
 
@@ -8,8 +9,17 @@ public class TaskBuilderTarget : ITarget
 {
     public Achievement Achievement => Achievement.TaskBuilder;
 
-    public AchievementResult Achieve(PostEventApiModel action, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
+    public AchievementResult Achieve(PostEventApiModel action, ProjectConfiguration? config,
+        IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
-        return new AchievementResult(true, 50);
+        var isEnabled = config == null || !config.AchievementEnabled.ContainsKey(Achievement) ||
+                        config.AchievementEnabled[Achievement];
+
+        if (!isEnabled)
+            return AchievementResult.NoResult;
+
+        var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 50;
+        
+        return new AchievementResult(true, (ulong)reward);
     }
 }

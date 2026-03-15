@@ -1,9 +1,8 @@
 import React, {memo, useEffect, useState} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
 import {type UserCardData} from './types';
-import {API_BASE_URL} from './config';
 
-await YTApp.register();
+const host = await YTApp.register();
 
 async function fetchUserCardData(): Promise<UserCardData | null> {
     try {
@@ -12,11 +11,7 @@ async function fetchUserCardData(): Promise<UserCardData | null> {
             return null;
         }
 
-        const response = await fetch(`${API_BASE_URL}/api/UserProfile/card?userId=${encodeURIComponent(userLogin)}`);
-        if (!response.ok) {
-            return null;
-        }
-        return await response.json() as UserCardData;
+        return await host.fetchApp('backend/user-card', {query: {userId: userLogin}}) as UserCardData;
     } catch {
         return null;
     }

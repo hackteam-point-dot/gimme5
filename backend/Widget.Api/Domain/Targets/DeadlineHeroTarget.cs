@@ -1,4 +1,5 @@
 ﻿using Widget.Api.ApiModels;
+using Widget.Api.Application;
 using Widget.Api.Repositories;
 
 namespace Widget.Api.Domain.Targets;
@@ -7,11 +8,27 @@ public class DeadlineHeroTarget : ITarget
 {
     public Achievement Achievement => Achievement.DeadlineHero;
 
-    public AchievementResult Achieve(PostEventApiModel action, IReadOnlyCollection<TasksRepository.TaskItem> tasks)
+    public AchievementResult Achieve(PostEventApiModel action, ProjectConfiguration? config,
+        IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
-        if (action.Event != EventType.ISSUE_RESOLVED || (action.DueDate.HasValue && DateTime.UtcNow < DateTimeOffset.FromUnixTimeMilliseconds(action.DueDate.Value)))
-            return new AchievementResult(false, 0);
+        var isEnabled = config == null || !config.AchievementEnabled.ContainsKey(Achievement) ||
+                        config.AchievementEnabled[Achievement];
         
-        return new AchievementResult(true, 100);
+        if (!isEnabled)
+            return AchievementResult.NoResult;
+
+        if (action.Event != EventType.ISSUE_RESOLVED)
+            return AchievementResult.NoResult;
+
+        if (action.DueDate.HasValue &&
+            DateTime.UtcNow <
+            DateTimeOffset.FromUnixTimeMilliseconds(action.DueDate.Value))
+        {
+            var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 100;
+        
+            return new AchievementResult(true, (ulong)reward);
+        }
+        
+        return AchievementResult.NoResult;
     }
 }
