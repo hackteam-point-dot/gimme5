@@ -65,7 +65,6 @@ export default defineConfig({
                 userRating: resolve(__dirname, 'src/widgets/user-dashboard/index.html'),
                 userCard: resolve(__dirname, 'src/widgets/user-card/index.html'),
                 teamRating: resolve(__dirname, 'src/widgets/team-dashboard/index.html'),
-                gimme5: resolve(__dirname, 'src/widgets/gimme5/index.html'),
                 adminPanel: resolve(__dirname, 'src/widgets/admin-panel/index.html'),
             }
         }

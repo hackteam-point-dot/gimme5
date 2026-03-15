@@ -4,14 +4,6 @@ exports.httpHandler = {
   endpoints: [
     {
       method: 'GET',
-      path: 'debug',
-      handle: function handle(ctx) {
-        const requestParam = ctx.request.getParameter('test');
-        ctx.response.json({test: requestParam});
-      }
-    },
-    {
-      method: 'GET',
       path: 'leaderboard',
       handle: function handle(ctx) {
         const limit = ctx.request.getParameter('limit');
