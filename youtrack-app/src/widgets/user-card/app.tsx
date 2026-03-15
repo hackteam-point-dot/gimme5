@@ -1,6 +1,7 @@
 import React, {memo, useEffect, useState} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
 import {type Achievement, type UserCardData} from './types';
+import { FlappyBug } from '../../flappy-bug/FlappyBug';
 
 const host = await YTApp.register();
 
@@ -21,25 +22,22 @@ interface UserCardProps {
     data: UserCardData;
 }
 
-const AchievementSecret: React.FunctionComponent<{achievement: Achievement}> = ({achievement}) => (
-  <div className="achievement-secret">
-    <span className="achievement-secret-title">🎉 Secret unlocked!</span>
-    <span className="achievement-secret-description">{achievement.description}</span>
-  </div>
-);
-
 const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
   const [clickCounts, setClickCounts] = useState<Record<number, number>>({});
-  const [revealedAchievementIds, setRevealedAchievementIds] = useState<Set<number>>(new Set());
+  const [easterEggRevealed, setEasterEggRevealed] = useState<boolean>();
 
   const handleAchievementClick = (achievement: Achievement) => {
     setClickCounts(prev => {
+      if (achievement.id !== 3){
+        return prev;
+      }
+
       const prevCount = prev[achievement.id] ?? 0;
       const nextCount = prevCount + 1;
       const next = {...prev, [achievement.id]: nextCount};
 
       if (nextCount === 5) {
-        setRevealedAchievementIds(prevSet => new Set(prevSet).add(achievement.id));
+        setEasterEggRevealed(() => true);
       }
 
       return next;
@@ -47,7 +45,18 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
   };
 
   return (
-    <div className="widget">
+    <div className="honor-board-container" style={{ width: 320, height: 160 }}>
+      {easterEggRevealed ? (
+        <FlappyBug 
+          //userId={currentUser.id} 
+          onClose={() => setEasterEggRevealed(false)}
+          onScoreSubmit={(score) => {
+            console.log(`User scored ${score}!`);
+            // Можно обновить локальный стейт пользователя здесь
+          }}
+        />
+      ) : (
+        <div className="widget">
       <div className="level-row">
         <div className="level-header">
           <span className="level-label">Level {data.level}</span>
@@ -59,8 +68,6 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
         <span className="user-balance">Balance: {data.balance}</span>
         <div className="achievements">
           {data.achievements.map(achievement => {
-            const revealed = revealedAchievementIds.has(achievement.id);
-
             return (
               <div
                 key={achievement.id}
@@ -68,27 +75,23 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
                 title={achievement.description}
                 onClick={() => handleAchievementClick(achievement)}
               >
-                {revealed ? (
-                  <AchievementSecret achievement={achievement}/>
-                ) : (
-                  <>
-                    <img
-                      className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
-                      src={achievement.imageUrl}
-                      alt={achievement.description}
-                      width={32}
-                      height={32}
-                    />
-                    {achievement.count > 1 && (
-                      <span className="achievement-count">x{achievement.count}</span>
-                    )}
-                  </>
-                )}
+                  <img
+                    className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
+                    src={achievement.imageUrl}
+                    alt={achievement.description}
+                    width={32}
+                    height={32}
+                  />
+                  {achievement.count > 1 && (
+                    <span className="achievement-count">x{achievement.count}</span>
+                  )}
               </div>
             );
           })}
         </div>
       </div>
+    </div>
+      )}
     </div>
   );
 };
