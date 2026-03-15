@@ -26,14 +26,6 @@
       "description": "Shows user card in GiveMeFive system"
     },
     {
-      "key": "gimme5_team_rating",
-      "name": "GiveMeFive team rating dashboard",
-      "indexPath": "team-dashboard/index.html",
-      "extensionPoint": "DASHBOARD_WIDGET",
-      "iconPath": "team-dashboard/widget-icon.svg",
-      "description": "Shows team rating in GiveMeFive system"
-    },
-    {
       "key": "gimme5_admin_panel",
       "name": "GiveMeFive Admin Panel",
       "indexPath": "admin-panel/index.html",

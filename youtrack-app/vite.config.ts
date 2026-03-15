@@ -41,7 +41,6 @@ export default defineConfig({
         allowedHosts: [
             'localhost',
             '127.0.0.1',
-            '.ngrok-free.app'
         ]
     },
     root: './src',
@@ -64,7 +63,6 @@ export default defineConfig({
                 // List every widget entry point here
                 userRating: resolve(__dirname, 'src/widgets/user-dashboard/index.html'),
                 userCard: resolve(__dirname, 'src/widgets/user-card/index.html'),
-                teamRating: resolve(__dirname, 'src/widgets/team-dashboard/index.html'),
                 adminPanel: resolve(__dirname, 'src/widgets/admin-panel/index.html'),
                 userProfile: resolve(__dirname, 'src/widgets/user-profile/index.html'),
                 previousDashboard: resolve(__dirname, 'src/widgets/previous-dashboard/index.html'),
