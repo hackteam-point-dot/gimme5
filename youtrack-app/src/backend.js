@@ -55,7 +55,7 @@ exports.httpHandler = {
         var connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
         connection.addHeader({name: 'Content-Type', value: 'application/json'});
         const response = connection.doSync('POST', '/api/events/flappy-bug', '', body);
-        ctx.response.json(JSON.parse(response.response));
+        ctx.response.json(response.response);
       }
     }
   ]
