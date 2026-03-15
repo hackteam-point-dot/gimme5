@@ -20,6 +20,11 @@ public class UserRepository(IMongoDatabase database)
         return await _usersCollection.Find(x => x.Id == userId).FirstOrDefaultAsync(ct);
     }
 
+    public async Task<IEnumerable<UserItem>> GetUsersByIds(IEnumerable<string> userIds, CancellationToken ct = default)
+    {
+        return await _usersCollection.Find(x => userIds.Contains(x.Id)).ToListAsync(ct);   
+    }
+
     public async Task<List<UserItem>> GetLeaderboardAsync(int limit = 10, int skip = 0, CancellationToken ct = default)
     {
         return await _usersCollection.Find(u => true)
