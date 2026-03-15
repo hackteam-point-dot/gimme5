@@ -9,6 +9,7 @@ export interface UserCardData {
     xp: number;
     maxXp: number;
     level: number;
+    heroClass: string;
     balance: number;
     achievements: Achievement[];
 }
