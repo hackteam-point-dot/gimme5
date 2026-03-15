@@ -229,7 +229,7 @@ const AppComponent: React.FunctionComponent = () => {
                 <Select
                   data={WEIGHT_TYPE_OPTIONS}
                   selected={selectedWeightType}
-                  onSelect={(item: {key: string}) => updateField('issueWeightType', item.key as ProjectConfiguration['issueWeightType'])}
+                  onSelect={(item: {key: string} | null) => item && updateField('issueWeightType', item.key as ProjectConfiguration['issueWeightType'])}
                 />
               </div>
             </div>
@@ -290,7 +290,7 @@ const AppComponent: React.FunctionComponent = () => {
 
           {/* Save */}
           <div className="save-container">
-            <Button primary loading={saving} onClick={handleSave}>
+            <Button primary disabled={saving} onClick={handleSave}>
               Сохранить изменения
             </Button>
           </div>
