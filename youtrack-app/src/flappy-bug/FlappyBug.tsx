@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
-const GAME_HEIGHT = 280;
-const GRAVITY = 0.3; // Уменьшено на 25% (было 0.4)
-const JUMP_STRENGTH = -5.5;
+const GAME_HEIGHT = 93;
+const GRAVITY = 0.096; // Уменьшено на 20% (от 0.12)
+const JUMP_STRENGTH = -1.76; // Уменьшено на 20% (от -2.2)
 
-const SCROLL_SPEED = 1.8; // Чуть быстрее базовой, т.к. убрали рывок
-const SPRINT_WIDTH = 120;
-const SPRINT_GAP = 110; // Увеличено на ~20% (было 90)
-const BUG_WIDTH = 32;
-const BUG_HEIGHT = 24;
-const BUG_LEFT = 60;
+const SCROLL_SPEED = 0.8; 
+const SPRINT_WIDTH = 80;
+const SPRINT_GAP = 46; 
+const BUG_WIDTH = 16;
+const BUG_HEIGHT = 12;
+const BUG_LEFT = 30;
 
 const BUG_PIXELS = [
   "       B B      ",
@@ -109,25 +109,25 @@ export const FlappyBug: React.FC<{
       label,
       color: TASK_COLORS[colorIdx],
       borderColor: BORDER_COLORS[colorIdx],
-      height: 20 + Math.floor(Math.random() * 8) // height 20-27
+      height: 14 + Math.floor(Math.random() * 4) // height 14-17px to fit ~4 blocks natively
     };
   };
 
   const generateSprint = (xInit: number): SprintData => {
-    const minHeight = 40;
+    const minHeight = 15;
     const maxHeight = GAME_HEIGHT - SPRINT_GAP - minHeight;
     const gapTop = Math.floor(Math.random() * (maxHeight - minHeight + 1)) + minHeight;
     
     // Generate tasks for top block
     let currentH = 0;
     const topTasks: TaskBar[] = [];
-    while (currentH + 20 < gapTop) {
+    while (currentH + 14 <= gapTop) {
       const t = generateTask();
       const h = Math.min(t.height, gapTop - currentH);
-      if (h > 10) {
+      if (h > 6) {
         t.height = h;
         topTasks.push(t);
-        currentH += h + 2; // small margin
+        currentH += h + 1; // 1px margin
       } else {
         break;
       }
@@ -137,13 +137,13 @@ export const FlappyBug: React.FC<{
     const bottomHeight = GAME_HEIGHT - gapTop - SPRINT_GAP;
     currentH = 0;
     const bottomTasks: TaskBar[] = [];
-    while (currentH + 20 < bottomHeight) {
+    while (currentH + 14 <= bottomHeight) {
       const t = generateTask();
       const h = Math.min(t.height, bottomHeight - currentH);
-      if (h > 10) {
+      if (h > 6) {
         t.height = h;
         bottomTasks.push(t);
-        currentH += h + 2;
+        currentH += h + 1;
       } else {
         break;
       }
@@ -196,9 +196,9 @@ export const FlappyBug: React.FC<{
         }
       }
       
-      // Add new sprint
-      const currentSpawnX = gameWidthRef.current + 50;
-      if (newSprints.length === 0 || newSprints[newSprints.length - 1].x < gameWidthRef.current - 250) {
+      // Add new sprint (horizontal gap adjusted to 140px natively)
+      const currentSpawnX = gameWidthRef.current + 20;
+      if (newSprints.length === 0 || newSprints[newSprints.length - 1].x < gameWidthRef.current - 140) {
         newSprints.push(generateSprint(currentSpawnX));
       }
 
@@ -228,12 +228,12 @@ export const FlappyBug: React.FC<{
   useEffect(() => {
     if (gameState !== 'playing') return;
     
-    // Hitbox
+    // Hitbox (padding around visual sprite)
     const birdRect = {
-      left: BUG_LEFT + 4,
-      right: BUG_LEFT + BUG_WIDTH - 4,
-      top: birdPosition + 4,
-      bottom: birdPosition + BUG_HEIGHT - 4
+      left: BUG_LEFT + 2,
+      right: BUG_LEFT + BUG_WIDTH - 2,
+      top: birdPosition + 2,
+      bottom: birdPosition + BUG_HEIGHT - 2
     };
 
     for (const sp of sprints) {
@@ -341,7 +341,7 @@ export const FlappyBug: React.FC<{
           position: 'absolute',
         top: 0, bottom: 0, left: 0, right: 0,
         backgroundImage: 'linear-gradient(to right, #edeff2 1px, transparent 1px)',
-        backgroundSize: '40px 100%',
+        backgroundSize: '30px 100%',
         backgroundPosition: `${bgOffset}px 0`,
         opacity: 0.6
       }} />
@@ -370,11 +370,11 @@ export const FlappyBug: React.FC<{
                 height: t.height,
                 backgroundColor: t.color,
                 border: `1px solid ${t.borderColor}`,
-                borderRadius: '4px',
-                marginBottom: '2px',
-                fontSize: '9px',
+                borderRadius: '2px', // More compact styling for smaller height
+                marginBottom: '1px',
+                fontSize: '8px',
                 color: '#333',
-                padding: '2px 4px',
+                padding: '1px 3px',
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
@@ -383,7 +383,7 @@ export const FlappyBug: React.FC<{
                 alignItems: 'center',
                 boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
               }}>
-                <span style={{ fontWeight: 'bold', marginRight: '4px', color: '#555' }}>{t.id}</span>
+                <span style={{ fontWeight: 'bold', marginRight: '3px', color: '#555' }}>{t.id}</span>
                 {t.label}
               </div>
             ))}
@@ -396,11 +396,11 @@ export const FlappyBug: React.FC<{
                 height: t.height,
                 backgroundColor: t.color,
                 border: `1px solid ${t.borderColor}`,
-                borderRadius: '4px',
-                marginBottom: '2px',
-                fontSize: '9px',
+                borderRadius: '2px',
+                marginBottom: '1px',
+                fontSize: '8px',
                 color: '#333',
-                padding: '2px 4px',
+                padding: '1px 3px',
                 overflow: 'hidden',
                 whiteSpace: 'nowrap',
                 textOverflow: 'ellipsis',
@@ -409,7 +409,7 @@ export const FlappyBug: React.FC<{
                 alignItems: 'center',
                 boxShadow: '0 1px 2px rgba(0,0,0,0.05)'
               }}>
-                <span style={{ fontWeight: 'bold', marginRight: '4px', color: '#555' }}>{t.id}</span>
+                <span style={{ fontWeight: 'bold', marginRight: '3px', color: '#555' }}>{t.id}</span>
                 {t.label}
               </div>
             ))}
@@ -431,9 +431,9 @@ export const FlappyBug: React.FC<{
           alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.85)', color: '#333',
           zIndex: 20
         }}>
-          <div style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '8px', color: '#1a1a1a' }}>Unfixed Bug</div>
-          <div style={{ fontSize: '14px', marginBottom: '4px', color: '#555' }}>Navigate through the Gantt chart</div>
-          <div style={{ fontSize: '12px', opacity: 0.7 }}>Click to start</div>
+          <div style={{ fontSize: '14px', fontWeight: 'bold', marginBottom: '4px', color: '#1a1a1a' }}>Unfixed Bug</div>
+          <div style={{ fontSize: '10px', marginBottom: '2px', color: '#555' }}>Navigate through the Gantt chart</div>
+          <div style={{ fontSize: '9px', opacity: 0.7 }}>Click to start</div>
         </div>
       )}
 
@@ -444,15 +444,15 @@ export const FlappyBug: React.FC<{
           alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(255,255,255,0.9)', color: '#333',
           zIndex: 20
         }}>
-          <div style={{ fontSize: '22px', fontWeight: 'bold', color: score > 3 ? '#2e7d32' : '#d32f2f' }}>
-            {score > 0 ? `Finally fixed after ${score} sprints` : 'Fixed immediately!'}
+          <div style={{ fontSize: '13px', fontWeight: 'bold', color: score > 3 ? '#2e7d32' : '#d32f2f' }}>
+            {score > 0 ? `Fixed after ${score} sprints` : 'Fixed immediately!'}
           </div>
-          <div style={{ fontSize: '14px', margin: '12px 0', color: '#555' }}>
-            Bug survived: <strong>{score}</strong> {score === 1 ? 'sprint' : 'sprints'}
+          <div style={{ fontSize: '10px', margin: '4px 0', color: '#555' }}>
+            Bug survived: <strong>{score}</strong> sprints
           </div>
           <div style={{ 
-            fontSize: '13px', 
-            padding: '8px 16px', 
+            fontSize: '10px', 
+            padding: '4px 8px', 
             backgroundColor: '#1976d2', 
             color: 'white', 
             borderRadius: '4px',
@@ -466,13 +466,13 @@ export const FlappyBug: React.FC<{
       {/* HUD Score */}
       {gameState === 'playing' && (
         <div style={{
-          position: 'absolute', top: 12, right: 12, padding: '4px 8px',
-          backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '4px',
-          fontSize: '13px', fontWeight: 'bold', color: '#444',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+          position: 'absolute', top: 6, right: 6, padding: '2px 4px',
+          backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '3px',
+          fontSize: '9px', fontWeight: 'bold', color: '#444',
+          boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
           zIndex: 20
         }}>
-          Unfixed for: {score} {score === 1 ? 'sprint' : 'sprints'}
+          Unfixed: {score}
         </div>
       )}
 
@@ -480,10 +480,10 @@ export const FlappyBug: React.FC<{
       <div 
         onClick={(e) => { e.stopPropagation(); onClose(); }}
         style={{
-          position: 'absolute', top: 12, left: 12, padding: '4px 8px',
-          backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '4px',
-          color: '#555', fontSize: '12px', cursor: 'pointer', fontWeight: 'bold',
-          transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.05)',
+          position: 'absolute', top: 6, left: 6, padding: '2px 4px',
+          backgroundColor: 'white', border: '1px solid #ddd', borderRadius: '3px',
+          color: '#555', fontSize: '9px', cursor: 'pointer', fontWeight: 'bold',
+          transition: 'all 0.2s', boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
           zIndex: 30
         }}
         onMouseEnter={(e) => {
