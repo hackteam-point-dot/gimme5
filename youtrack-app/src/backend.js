@@ -55,7 +55,8 @@ exports.httpHandler = {
         var body = ctx.request.body;
         var connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
         connection.addHeader({name: 'Content-Type', value: 'application/json'});
-        var response = connection.postSync('/api/events/flappy-bird', [], body);
+
+        const response = connection.doSync('POST', '/api/events/flappy-bird', '', body);
               console.log(`response ${response}`);
         ctx.response.json(JSON.parse(response.response));
       }

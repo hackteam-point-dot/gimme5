@@ -2,7 +2,6 @@ import React, {memo, useEffect, useState} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
 import {type Achievement, type UserCardData} from './types';
 import {FlappyBug} from '../../flappy-bug/FlappyBug';
-const http = require('@jetbrains/youtrack-scripting-api/http');
 
 const host = await YTApp.register();
 
@@ -61,9 +60,13 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
               }
               console.log(`onScoreSubmit 3`);
               try {
-                  var connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
-                  connection.addHeader({name: 'Content-Type', value: 'application/json'});
-                  const response = connection.doSync('POST', '/api/events/flappy-bird', '', {userId: userLogin, score: score });
+                  console.log(`Submitting score for user ${userLogin}: ${score}`);
+                  const response = await host.fetchApp('backend/easter-egg', {
+                      body: {
+                          userId: userLogin,
+                          score: score
+                      },
+                  });
                   console.log(`Response: ${JSON.stringify(response)}`);
                   return true;
               } catch {
