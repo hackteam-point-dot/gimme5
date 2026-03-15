@@ -6,5 +6,6 @@ public enum Achievement
     DeadlineHero,
     OnFire,
     BugHunter,
-    NightOwl
+    NightOwl,
+    Sheeva
 }
