@@ -47,23 +47,28 @@ public class DashboardController(
         {
             var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(projectId, ct) ??
                                 await leaderboardRepository.StartNewPeriod(projectId, ct);
-            
-            var users = await leaderboardRepository.GetLeaderboard(currentPeriod.Id, limit, skip, ct);
+
+            var leaderboardItems = await leaderboardRepository.GetLeaderboard(currentPeriod.Id, limit, skip, ct);
             var totalCount = await leaderboardRepository.GetTotalUsersCount(currentPeriod.Id, ct);
 
-            var userAchievementLevelsByUserId = users
+            var userIds = leaderboardItems.Select(x => x.Key.UserId).ToArray();
+            var users = await userRepository.GetUsersByIds(userIds, ct);
+            var usersMap = users.ToDictionary(x => x.Id);
+
+            var userAchievementLevelsByUserId = leaderboardItems
                 .ToDictionary(
                     x => x.Key.UserId,
                     x => x.Achievements.GroupBy(y => y).ToDictionary(y => y.Key, y => y.Count()));
 
-            var items = users.Select(async u =>
+            var items = leaderboardItems.Select(async u =>
             {
-                var user = await userRepository.GetUserById(u.Key.UserId, ct);
+                var user = usersMap.GetValueOrDefault(u.Key.UserId);
                 var achievements = userAchievementLevelsByUserId.TryGetValue(u.Key.UserId, out var levels)
                         ? levels.Select(x => Mapper.MapUserAchievementApiModel(x.Key, x.Value)).ToArray()
                         : []
                     ;
-                return new UserLeaderboardApiModel.Item(u.Key.UserId, u.Exp, 0, achievements, user?.Title ?? string.Empty);
+                return new UserLeaderboardApiModel.Item(u.Key.UserId, u.Exp, user?.Level ?? 0, achievements,
+                    user?.Title ?? string.Empty);
             }).Select(x => x.Result);
 
             var leaderboard = new UserLeaderboardApiModel(items, skip, totalCount);
