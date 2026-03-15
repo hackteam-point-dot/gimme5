@@ -11,4 +11,5 @@ public record ProjectConfigurationApiModel(
     int BugResolveReward,
     string IssueWeightFieldName,
     Dictionary<Priority, decimal> PriorityMultipliers,
-    Dictionary<Achievement, int> AchievementRewards);
+    Dictionary<Achievement, int> AchievementRewards,
+    Dictionary<Achievement, bool> AchievementEnabled);
