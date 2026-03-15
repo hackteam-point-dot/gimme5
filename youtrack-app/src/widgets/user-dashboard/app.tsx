@@ -4,7 +4,7 @@ import Selection from '@jetbrains/ring-ui-built/components/table/selection';
 import {type Column} from '@jetbrains/ring-ui-built/components/table/header-cell';
 
 import {type EmbeddableWidgetAPI} from '../../../@types/globals';
-import {type UserRating} from './types';
+import {type UserRating, UserRatingResponse} from './types';
 
 const DEFAULT_LIMIT = 10;
 const DEFAULT_SKIP = 0;
@@ -17,7 +17,7 @@ async function fetchLeaderboard(): Promise<UserRating[]> {
         const result = await host.fetchApp('backend/leaderboard', {
             query: {limit: String(DEFAULT_LIMIT), skip: String(DEFAULT_SKIP)}
         });
-        return (result as UserRating[]) ?? [];
+        return ((result as UserRatingResponse).items) ?? [];
     } catch {
         return [];
     }
@@ -55,7 +55,6 @@ const AppComponent: React.FunctionComponent = () => {
 
     useEffect(() => {
         fetchLeaderboard().then(result => {
-            console.log('Fetched leaderboard data:', result);
             setData(result);
             setLoading(false);
         });
