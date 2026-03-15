@@ -32,7 +32,7 @@ public class EventsController(
             return Ok(null);
         
         var achievementResult = await achievementService.CalculateAchievements(task!, args, args.Login);
-        var actualExp = await xpService.TryAddXp(args, achievementResult.Exp);
+        var actualExp = await xpService.TryAddXp(args, achievementResult);
 
         if (achievementResult.Exp != 0 || actualExp.Exp != 0)
             await tasksRepository.SetExpAwardedAsync(args.IssueId, true);

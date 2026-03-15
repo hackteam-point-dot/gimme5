@@ -14,7 +14,7 @@ public class XpService(
 {
     public record XpAddResult(ulong Exp, ulong ExpChange, int? LevelUpgradedTo, string? HeroClass);
 
-    public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel, ulong achievementReward)
+    public async Task<XpAddResult> TryAddXp(PostEventApiModel eventApiModel, AchievementService.AchievementResult achievementResult)
     {
         var currentPeriod = await leaderboardRepository.GetCurrentPeriodAsync(eventApiModel.ProjectKey);
         
@@ -62,7 +62,7 @@ public class XpService(
             if (cfg.PriorityMultipliers.TryGetValue(eventApiModel.IssuePriority, out var priorityMultiplier))
                 taskXp = (int)(priorityMultiplier * taskXp);
             
-            taskXp += (int)achievementReward;
+            taskXp += (int)achievementResult.Exp;
             
             var newXp = user.Xp + (ulong)taskXp;
 
@@ -73,6 +73,8 @@ public class XpService(
             
             var newUserClass = heroClassesService.CalculateHeroClasses(actualLevenInfo.Level, userAchievements.Select(x => x.Achievement).ToImmutableList());
             await userRepository.SetXpAndLevel(user.Id, newXp, actualLevenInfo.Level, newUserClass);
+            await leaderboardRepository.IncrementExpAndAchievement(currentPeriod.Id, user.Id, taskXp,
+                achievementResult.Achievements);
 
             return new(newXp, (ulong)taskXp, levelUpgraded, newUserClass);
         }

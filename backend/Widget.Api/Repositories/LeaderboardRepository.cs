@@ -1,4 +1,5 @@
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver;
 using Widget.Api.Domain;
 
@@ -8,7 +9,7 @@ public record LeaderboardPeriod(ObjectId Id, string ProjectId, bool IsCurrent, D
 
 public record LeaderboardItemKey(ObjectId PeriodId, string UserId);
 
-public record LeaderboardItem(LeaderboardItemKey Key, ulong Exp, Achievement[] Achievements);
+public record LeaderboardItem([property: BsonId]LeaderboardItemKey Key, ulong Exp, Achievement[] Achievements);
 
 public class LeaderboardRepository(IMongoDatabase database)
 {
@@ -40,14 +41,14 @@ public class LeaderboardRepository(IMongoDatabase database)
         return period;
     }
 
-    public async Task IncrementExpAndAchievement(ObjectId periodId, string userId, ulong exp,
+    public async Task IncrementExpAndAchievement(ObjectId periodId, string userId, int exp,
         Achievement[] achievements, CancellationToken ct = default)
     {
         var key = new LeaderboardItemKey(periodId, userId);
 
         var update = Builders<LeaderboardItem>.Update
             .SetOnInsert(x => x.Key, key)
-            .Inc(x => x.Exp, exp)
+            .Inc(x => x.Exp, (ulong)exp)
             .PushEach(x => x.Achievements, achievements);
 
         await _itemsCollection.UpdateOneAsync(x => x.Key == key, update, new UpdateOptions { IsUpsert = true },
