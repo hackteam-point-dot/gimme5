@@ -53,7 +53,7 @@
       "key": "gimme5_user_profile",
       "name": "GiveMeFive",
       "indexPath": "user-profile/index.html",
-      "extensionPoint": "UER_PROFILE_SETTINGS",
+      "extensionPoint": "USER_PROFILE_SETTINGS",
       "iconPath": "user-profile/widget-icon.svg",
       "description": "Shows user profile in GiveMeFive system"
     }
