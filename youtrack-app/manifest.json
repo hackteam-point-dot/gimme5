@@ -40,6 +40,14 @@
       "extensionPoint": "ADMINISTRATION_MENU_ITEM",
       "iconPath": "admin-panel/widget-icon.svg",
       "description": "Configuration panel for GiveMeFive project settings (admin only)"
+    },
+    {
+      "key": "gimme5_user_profile",
+      "name": "GiveMeFive user profile",
+      "indexPath": "user-profile/index.html",
+      "extensionPoint": "USER_PROFILE_SETTINGS",
+      "iconPath": "user-profile/widget-icon.svg",
+      "description": "Shows user profile in GiveMeFive system"
     }
   ]
 }
