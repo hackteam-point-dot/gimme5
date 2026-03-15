@@ -1,5 +1,4 @@
 const http = require('@jetbrains/youtrack-scripting-api/http');
-const createYouTrackClient = require('@jetbrains/youtrack-apps');
 
 exports.httpHandler = {
   endpoints: [
@@ -52,11 +51,7 @@ exports.httpHandler = {
       method: 'POST',
       path: 'easter-egg',
       handle: function handle(ctx) {
-        const ytClient = createYouTrackClient(ctx);
-        const user = ytClient.getSync('users/me?fields=id,login,fullName');
-
         var body = ctx.request.body;
-        body.userId = user.login;
         var connection = new http.Connection('https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net');
         connection.addHeader({name: 'Content-Type', value: 'application/json'});
         const response = connection.doSync('POST', '/api/events/flappy-bug', '', body);
