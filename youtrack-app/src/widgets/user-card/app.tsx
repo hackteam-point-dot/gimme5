@@ -1,6 +1,7 @@
 import React, {memo, useEffect, useState} from 'react';
 import ProgressBar from '@jetbrains/ring-ui-built/components/progress-bar/progress-bar';
-import {type UserCardData} from './types';
+import {type Achievement, type UserCardData} from './types';
+import { FlappyBug } from '../../flappy-bug/FlappyBug';
 
 const host = await YTApp.register();
 
@@ -21,36 +22,78 @@ interface UserCardProps {
     data: UserCardData;
 }
 
-const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => (
-  <div className="widget">
-    <div className="level-row">
-      <div className="level-header">
-        <span className="level-label">Level {data.level}</span>
-        <span className="level-xp">{data.xp} / {data.maxXp}</span>
-      </div>
-      <ProgressBar value={data.xp} max={data.maxXp}/>
-    </div>
-    <div className="achievements-row">
-      <span className="user-balance">Balance: {data.balance}</span>
-      <div className="achievements">
-        {data.achievements.map(achievement => (
-          <div key={achievement.id} className="achievement-item" title={achievement.description}>
-            <img
-              className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
-              src={achievement.imageUrl}
-              alt={achievement.description}
-              width={32}
-              height={32}
-            />
-            {achievement.count > 1 && (
-            <span className="achievement-count">x{achievement.count}</span>
-                        )}
+const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
+  const [clickCounts, setClickCounts] = useState<Record<number, number>>({});
+  const [easterEggRevealed, setEasterEggRevealed] = useState<boolean>();
+
+  const handleAchievementClick = (achievement: Achievement) => {
+    setClickCounts(prev => {
+      if (achievement.id !== 3){
+        return prev;
+      }
+
+      const prevCount = prev[achievement.id] ?? 0;
+      const nextCount = prevCount + 1;
+      const next = {...prev, [achievement.id]: nextCount};
+
+      if (nextCount === 5) {
+        setEasterEggRevealed(() => true);
+      }
+
+      return next;
+    });
+  };
+
+  return (
+    <div className="widget">
+      {easterEggRevealed ? (
+        <FlappyBug
+          //userId={currentUser.id} 
+          onClose={() => setEasterEggRevealed(false)}
+          onScoreSubmit={(score) => {
+            console.log(`User scored ${score}!`);
+            // Можно обновить локальный стейт пользователя здесь
+          }}
+        />
+      ) : (
+        <>
+          <div className="level-row">
+            <div className="level-header">
+              <span className="level-label">Level {data.level}</span>
+              <span className="level-xp">{data.xp} / {data.maxXp}</span>
+            </div>
+            <ProgressBar value={data.xp} max={data.maxXp} />
           </div>
-                ))}
-      </div>
+          <div className="achievements-row">
+            <span className="user-balance">Balance: {data.balance}</span>
+            <div className="achievements">
+              {data.achievements.map(achievement => {
+                return (
+                  <div
+                    key={achievement.id}
+                    className="achievement-item"
+                    title={achievement.description}
+                    onClick={() => handleAchievementClick(achievement)}
+                  >
+                    <img
+                      className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
+                      src={achievement.imageUrl}
+                      alt={achievement.description}
+                      width={32}
+                      height={32}
+                    />
+                    {achievement.count > 1 && (
+                      <span className="achievement-count">x{achievement.count}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>)}
     </div>
-  </div>
-);
+  );
+};
 
 const AppComponent: React.FunctionComponent = () => {
     const [data, setData] = useState<UserCardData | null>(null);

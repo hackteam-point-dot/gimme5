@@ -45,4 +45,9 @@ public class UserAchievementRepository(IMongoDatabase database)
         return await _collection.Find(x => x.Key.UserId == userId)
             .ToListAsync(ct);
     }
+
+    public async Task<List<UserAchievementItem>> GetByUserIds(string[] userIds, CancellationToken ct = default)
+    {
+        return await _collection.Find(x => userIds.Contains(x.Key.UserId)).ToListAsync(ct);
+    }
 }
