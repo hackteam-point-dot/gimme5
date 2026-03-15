@@ -255,12 +255,17 @@ export const FlappyBug: React.FC<{
   // Handle API Contract (Send Score on Game Over)
   useEffect(() => {
     if (gameState === 'gameover') {
+
+      console.log('--- MINIGAME API CONTRACT DEMO ---');
+
+      console.log('onScoreSubmit is ' + onScoreSubmit);
+
       if (onScoreSubmit) {
         onScoreSubmit(score);
+        console.log('onScoreSubmit invoked');
       }
       
       // Иллюстрация контракта для бэкенда
-      console.log('--- MINIGAME API CONTRACT DEMO ---');
       console.log('POST /api/minigame/score');
       console.log('Payload:', JSON.stringify({ userId, score }));
       

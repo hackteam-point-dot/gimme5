@@ -66,6 +66,7 @@ export default defineConfig({
                 userCard: resolve(__dirname, 'src/widgets/user-card/index.html'),
                 teamRating: resolve(__dirname, 'src/widgets/team-dashboard/index.html'),
                 adminPanel: resolve(__dirname, 'src/widgets/admin-panel/index.html'),
+                userProfile: resolve(__dirname, 'src/widgets/user-profile/index.html'),
             }
         }
     }

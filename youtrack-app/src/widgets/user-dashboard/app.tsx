@@ -41,6 +41,11 @@ function buildColumns(data: UserRating[]): Column<UserRating>[] {
             getValue: (item: UserRating) => item.level,
         },
         {
+            id: 'level',
+            title: 'Level',
+            getValue: (item: UserRating) => item.heroClass,
+        },
+        {
             id: 'exp',
             title: 'XP',
             getValue: (item: UserRating) => item.exp.toLocaleString(),
