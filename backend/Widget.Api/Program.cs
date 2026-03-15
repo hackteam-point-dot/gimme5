@@ -61,6 +61,7 @@ builder.Services.AddTransient<ITarget, OnFireTarget>();
 builder.Services.AddTransient<ITarget, BugHunterTarget>();
 builder.Services.AddTransient<ITarget, NightOwlTarget>();
 builder.Services.AddTransient<ITarget, SheevaTarget>();
+builder.Services.AddTransient<ISecretTarget, LazyBastardTarget>();
 
 builder.Services.AddSingleton<HeroClassesService>();
 

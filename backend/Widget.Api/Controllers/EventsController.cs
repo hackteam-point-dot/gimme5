@@ -43,8 +43,9 @@ public class EventsController(
 
     [HttpPost]
     [Route("flappy-bug")]
-    public async Task FlappyScore([FromBody]FlappyScoreApiRequest score, CancellationToken ct)
+    public async Task<ActionResult<bool>> FlappyScore([FromBody]FlappyScoreApiRequest score, CancellationToken ct)
     {
-        
+        var result = await achievementService.CalculateLazyBastardAchievement(score.UserId, score.Score);
+        return Ok(result);
     }
 }
