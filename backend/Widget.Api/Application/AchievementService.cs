@@ -24,12 +24,8 @@ public class AchievementService(
 
         var awardedAchievements = new List<string>();
         ulong totalExp = 0;
-
-        var enabledAchievements = config != null
-            ? systemAchievements.Where(x => config.AchievementEnabled.ContainsKey(x.Achievement))
-            : systemAchievements;
-
-        foreach (var a in enabledAchievements)
+        
+        foreach (var a in systemAchievements)
         {
             var result = a.Achieve(action, config, tasks);
 

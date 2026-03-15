@@ -25,27 +25,27 @@ async function fetchLeaderboard(): Promise<UserRating[]> {
 
 function buildColumns(data: UserRating[]): Column<UserRating>[] {
     return [
-      {
-        id: 'rank',
-        title: '#',
-        getValue: (item: UserRating) => data.indexOf(item) + 1,
-      },
-      {
-        id: 'userId',
-        title: 'User',
-        getValue: (item: UserRating) => item.userId,
-      },
-      {
-        id: 'level',
-        title: 'Level',
-        getValue: (item: UserRating) => item.level,
-      },
-      {
-        id: 'exp',
-        title: 'XP',
-        getValue: (item: UserRating) => item.exp.toLocaleString(),
-        rightAlign: true,
-      },
+        {
+            id: 'rank',
+            title: '#',
+            getValue: (item: UserRating) => data.indexOf(item) + 1,
+        },
+        {
+            id: 'userId',
+            title: 'User',
+            getValue: (item: UserRating) => item.userId,
+        },
+        {
+            id: 'level',
+            title: 'Level',
+            getValue: (item: UserRating) => item.level,
+        },
+        {
+            id: 'exp',
+            title: 'XP',
+            getValue: (item: UserRating) => item.exp.toLocaleString(),
+            rightAlign: true,
+        },
     ];
 }
 
@@ -55,6 +55,7 @@ const AppComponent: React.FunctionComponent = () => {
 
     useEffect(() => {
         fetchLeaderboard().then(result => {
+            console.log('Fetched leaderboard data:', result);
             setData(result);
             setLoading(false);
         });

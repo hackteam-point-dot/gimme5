@@ -10,8 +10,8 @@ namespace Widget.Api.Controllers;
 [Route("api/[controller]")]
 public class UserProfileController(
     UserRepository userRepository,
-    LevelCalculator levelCalculator,
-    ProjectConfigurationRepository projectConfigurationRepository) : ControllerBase
+    UserAchievementRepository userAchievementRepository,
+    LevelCalculator levelCalculator) : ControllerBase
 {
     [HttpGet]
     public IActionResult OkResult()
@@ -23,41 +23,55 @@ public class UserProfileController(
     public async Task<ActionResult<UserCardApiModel>> GetUserCard([FromQuery] string userId)
     {
         var user = await userRepository.GetUserById(userId);
+        var userAchievements = await userAchievementRepository.GetByUserIdAsync(userId);
+        
+        var userAchievementLevels = userAchievements.ToDictionary(x => x.Achievement, x => x.Level);
 
         UserCardApiModel card;
 
-        Dictionary<Achievement, UserAchievementApiModel> achievements;
+        var achievements = Enum.GetValues<Achievement>()
+            .Select(achievementType =>
+            {
+                var level = userAchievementLevels.GetValueOrDefault(achievementType, 0);
+                return CreateUserAchievementApiModel(achievementType, level);
+            })
+            .ToArray();
 
         if (user == null)
         {
             var firstLevel = levelCalculator.FirstLevelInfo;
-            card = new UserCardApiModel(0, firstLevel.MaxXp, firstLevel.Level, []);
+            card = new UserCardApiModel(0, firstLevel.MaxXp, firstLevel.Level, achievements);
         }
         else
         {
             var levelInfo = levelCalculator.GetLevelInfo(user.Xp);
-            card = new UserCardApiModel(
-                user.Xp,
-                levelInfo.MaxXp,
-                user.Level,
-                [
-                    new UserAchievementApiModel(1,
-                        "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0IiBmaWxsPSJub25lIiBzdHJva2U9IiMyQzU4NzciIHN0cm9rZS13aWR0aD0iMiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICA8Y2lyY2xlIGN4PSIxMiIgY3k9IjEyIiByPSIxMCIgZmlsbD0iI0YyRERCRCIvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjYiIHN0cm9rZT0iIzg1QzNENyIvPgogIDxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjIiIGZpbGw9IiNFODgxNDUiIHN0cm9rZT0iI0U4ODE0NSIvPgogIDxsaW5lIHgxPSIxMiIgeTE9IjIiIHgyPSIxMiIgeTI9IjQiIHN0cm9rZT0iIzJDNTg3NyIvPgogIDxsaW5lIHgxPSIxMiIgeTE9IjIwIiB4Mj0iMTIiIHkyPSIyMiIgc3Ryb2tlPSIjMkM1ODc3Ii8+CiAgPGxpbmUgeDE9IjIiIHkxPSIxMiIgeDI9IjQiIHkyPSIxMiIgc3Ryb2tlPSIjMkM1ODc3Ii8+CiAgPGxpbmUgeDE9IjIwIiB5MT0iMTIiIHgyPSIyMiIgeTI9IjEyIiBzdHJva2U9IiMyQzU4NzciLz4KPC9zdmc+",
-                        "First Blood — resolved the first issue in the sprint", 1),
-                    new UserAchievementApiModel(2, "https://api.dicebear.com/9.x/shapes/svg?seed=speed-demon&size=24",
-                        "Speed Demon — closed 5 issues in one day", 3),
-                    new UserAchievementApiModel(3, "https://api.dicebear.com/9.x/shapes/svg?seed=bug-hunter&size=24",
-                        "Bug Hunter — found and reported 10 bugs", 1),
-                    new UserAchievementApiModel(4, "https://api.dicebear.com/9.x/shapes/svg?seed=team-player&size=24",
-                        "Team Player — reviewed 15 pull requests", 7),
-                    new UserAchievementApiModel(5, "https://api.dicebear.com/9.x/shapes/svg?seed=streak-master&size=24",
-                        "Streak Master — completed tasks 7 days in a row", 2)
-                ]
-            );
+            card = new UserCardApiModel(user.Xp, levelInfo.MaxXp, user.Level, achievements);
         }
 
         return Ok(card);
     }
 
+    private static UserAchievementApiModel CreateUserAchievementApiModel(Achievement type, int level)
+    {
+        return type switch
+        {
+            Achievement.TaskBuilder => new UserAchievementApiModel((int)type,
+                "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/pngspixelart/task-builder.png",
+                "Перевод одной любой задачи (Task) или User Story в Done.", level),
+            Achievement.DeadlineHero => new UserAchievementApiModel((int)type,
+                "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/pngspixelart/deadline-hero.png",
+                "За весь спринт ни одна ваша задача не получила статус \"Carry Over\" (сдвинута на следующий спринт).", level),
+            Achievement.OnFire => new UserAchievementApiModel((int)type,
+                "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/pngspixelart/on-fire.png",
+                "Закрывать хотя бы по одной задаче 5 рабочих дней подряд внутри текущего спринта.", level),
+            Achievement.BugHunter => new UserAchievementApiModel((int)type,
+                "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/pngspixelart/bug-hunter.png",
+                "Накапливаемая ачивка. Выдается за каждые 5 суммарно закрытых багов.", level),
+            Achievement.NightOwl => new UserAchievementApiModel((int)type,
+                "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/pngspixelart/night-owl.png",
+                "Выдается за закрытие задачи в нестандартные часы (до 09:00 или после 21:00 по рабочему графику).", level),
+            _ => new UserAchievementApiModel((int)type, "", type.ToString(), level)
+        };
+    }
     
 }

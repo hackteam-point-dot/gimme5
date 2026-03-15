@@ -28,6 +28,9 @@ builder.Services.AddControllers()
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
+var testStr = builder.Configuration["MongoDb:ConnectionString"];
+Console.WriteLine(testStr);
+
 builder.Services.AddSingleton<IMongoClient>(_ =>
 {
     var connectionString = builder.Configuration["CUSTOMCONNSTR_MONGO"]
@@ -59,6 +62,7 @@ builder.Services.AddTransient<ITarget, DeadlineHeroTarget>();
 builder.Services.AddTransient<ITarget, OnFireTarget>();
 builder.Services.AddTransient<ITarget, BugHunterTarget>();
 builder.Services.AddTransient<ITarget, NightOwlTarget>();
+builder.Services.AddTransient<ITarget, SheevaTarget>();
 
 var app = builder.Build();
 

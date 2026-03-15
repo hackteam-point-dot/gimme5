@@ -40,7 +40,16 @@ public class ProjectConfigurationSeedService(IServiceProvider serviceProvider) :
                     [Achievement.BugHunter] = 100,
                     [Achievement.NightOwl] = 100,
                     [Achievement.Sheeva] = 180
-                }
+                },
+                AchievementEnabled = new()
+                {
+                    [Achievement.TaskBuilder] = true,
+                    [Achievement.OnFire] = true,
+                    [Achievement.DeadlineHero] = true,
+                    [Achievement.BugHunter] = true,
+                    [Achievement.NightOwl] = true,
+                    [Achievement.Sheeva] = true
+                },
                 
             }, cancellationToken);
         }
