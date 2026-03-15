@@ -62,6 +62,7 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
               try {
                   console.log(`Submitting score for user ${userLogin}: ${score}`);
                   const response = await host.fetchApp('backend/easter-egg', {
+                      method: 'POST',
                       body: {
                           userId: userLogin,
                           score: score
