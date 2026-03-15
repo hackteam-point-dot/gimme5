@@ -18,7 +18,7 @@ public class UserProfileController(
     public async Task<ActionResult<UserCardApiModel>> GetUserCard([FromQuery] string userId)
     {
         var user = await userRepository.GetUserById(userId);
-        var userAchievements = await userAchievementRepository.GetByUserIdAsync(userId);
+        var userAchievements = await userAchievementRepository.GetByUserId(userId);
         
         var userAchievementLevels = userAchievements.ToDictionary(x => x.Achievement, x => x.Level);
 

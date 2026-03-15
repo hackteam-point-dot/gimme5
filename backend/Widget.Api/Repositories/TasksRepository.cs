@@ -24,19 +24,19 @@ public class TasksRepository(IMongoDatabase database)
     private readonly IMongoCollection<TaskItem> _collection =
         database.GetCollection<TaskItem>("Tasks");
 
-    public async Task<List<TaskItem>> GetAllAsync(CancellationToken ct = default)
+    public async Task<List<TaskItem>> GetAll(CancellationToken ct = default)
     {
         return await _collection.Find(FilterDefinition<TaskItem>.Empty)
             .ToListAsync(cancellationToken: ct);
     }
 
-    public async Task<List<TaskItem>> GetByIdsAsync(IEnumerable<string> ids, CancellationToken ct = default)
+    public async Task<List<TaskItem>> GetByIds(IEnumerable<string> ids, CancellationToken ct = default)
     {
         return await _collection.Find(t => ids.Contains(t.Id))
             .ToListAsync(cancellationToken: ct);
     }
 
-    public async Task<TaskItem?> CreateOrUpdateAsync(TaskItem item, CancellationToken ct = default)
+    public async Task<TaskItem?> CreateOrUpdate(TaskItem item, CancellationToken ct = default)
     {
         var update = Builders<TaskItem>.Update
             .Set(t => t.ProjectId, item.ProjectId)
@@ -58,7 +58,7 @@ public class TasksRepository(IMongoDatabase database)
             cancellationToken: ct);
     }
 
-    public async Task<TaskItem?> SetExpAwardedAsync(string id, bool expAwarded, CancellationToken ct = default)
+    public async Task<TaskItem?> SetExpAwarded(string id, bool expAwarded, CancellationToken ct = default)
     {
         var update = Builders<TaskItem>.Update
             .Set(t => t.ExpAwarded, expAwarded);
