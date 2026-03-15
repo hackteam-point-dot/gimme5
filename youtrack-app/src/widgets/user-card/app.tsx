@@ -45,9 +45,9 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
   };
 
   return (
-    <div className="honor-board-container" style={{ width: 320, height: 160 }}>
+    <div className="widget">
       {easterEggRevealed ? (
-        <FlappyBug 
+        <FlappyBug
           //userId={currentUser.id} 
           onClose={() => setEasterEggRevealed(false)}
           onScoreSubmit={(score) => {
@@ -56,42 +56,41 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
           }}
         />
       ) : (
-        <div className="widget">
-      <div className="level-row">
-        <div className="level-header">
-          <span className="level-label">Level {data.level}</span>
-          <span className="level-xp">{data.xp} / {data.maxXp}</span>
-        </div>
-        <ProgressBar value={data.xp} max={data.maxXp}/>
-      </div>
-      <div className="achievements-row">
-        <span className="user-balance">Balance: {data.balance}</span>
-        <div className="achievements">
-          {data.achievements.map(achievement => {
-            return (
-              <div
-                key={achievement.id}
-                className="achievement-item"
-                title={achievement.description}
-                onClick={() => handleAchievementClick(achievement)}
-              >
-                  <img
-                    className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
-                    src={achievement.imageUrl}
-                    alt={achievement.description}
-                    width={32}
-                    height={32}
-                  />
-                  {achievement.count > 1 && (
-                    <span className="achievement-count">x{achievement.count}</span>
-                  )}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
-      )}
+        <>
+          <div className="level-row">
+            <div className="level-header">
+              <span className="level-label">Level {data.level}</span>
+              <span className="level-xp">{data.xp} / {data.maxXp}</span>
+            </div>
+            <ProgressBar value={data.xp} max={data.maxXp} />
+          </div>
+          <div className="achievements-row">
+            <span className="user-balance">Balance: {data.balance}</span>
+            <div className="achievements">
+              {data.achievements.map(achievement => {
+                return (
+                  <div
+                    key={achievement.id}
+                    className="achievement-item"
+                    title={achievement.description}
+                    onClick={() => handleAchievementClick(achievement)}
+                  >
+                    <img
+                      className={`achievement-icon${achievement.count === 0 ? ' achievement-inactive' : ''}`}
+                      src={achievement.imageUrl}
+                      alt={achievement.description}
+                      width={32}
+                      height={32}
+                    />
+                    {achievement.count > 1 && (
+                      <span className="achievement-count">x{achievement.count}</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </>)}
     </div>
   );
 };
