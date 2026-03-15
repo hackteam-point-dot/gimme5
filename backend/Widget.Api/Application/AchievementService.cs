@@ -29,7 +29,7 @@ public class AchievementService(
 
         foreach (var a in systemAchievements)
         {
-            var result = a.Achieve(action, config, tasks);
+            var result = a.Achieve(action, config, tasks.Where(x => x.ResolverId == userId).ToList());
 
             if (result.IsAchieved)
             {

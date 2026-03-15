@@ -20,7 +20,7 @@ public class HeroClassesService
                 2 => "Solver",
                 3 => "Specialist",
                 4 => "Expert",
-                5 => "Legend",
+                >= 5 => "Legend",
                 _ => string.Empty
             };
 
@@ -31,7 +31,7 @@ public class HeroClassesService
             2 => "Blaze Tender",
             3 => "Inferno Wrangler",
             4 => "Pyro Vanguard",
-            5 => "Flame Conqueror",
+            >= 5 => "Flame Conqueror",
             _ => string.Empty
         };
     }
