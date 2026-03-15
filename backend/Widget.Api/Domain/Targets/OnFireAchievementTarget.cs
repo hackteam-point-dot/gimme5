@@ -19,11 +19,15 @@ public class OnFireTarget : ITarget
             return AchievementResult.NoResult;
         
         var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 200;
-        var achieved = tasks
+        var achievementTasks = tasks
             .Where(t => t.ResolverId == action.Login && t.DateResolved.HasValue)
             .GroupBy(t => t.DateResolved!.Value.Date)
-            .Any(g => g.Count() >= 5);
+            .Where(g => g.Count() >= 5)
+            .ToList();
 
-        return new AchievementResult(achieved, achieved ? (ulong)reward : 0UL);
+        var achieved = achievementTasks.Any();
+
+        return new AchievementResult(achieved, achieved ? (ulong) reward : 0UL,
+            achievementTasks.SelectMany(x => x).Select(x => x.Id).Distinct().ToArray());
     }
 }

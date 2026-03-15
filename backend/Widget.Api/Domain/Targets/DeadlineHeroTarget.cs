@@ -26,7 +26,7 @@ public class DeadlineHeroTarget : ITarget
         {
             var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 100;
         
-            return new AchievementResult(true, (ulong)reward);
+            return new AchievementResult(true, (ulong)reward, [action.IssueId]);
         }
         
         return AchievementResult.NoResult;

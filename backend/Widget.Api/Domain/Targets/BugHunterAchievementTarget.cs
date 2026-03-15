@@ -21,9 +21,10 @@ public class BugHunterTarget : ITarget
             return AchievementResult.NoResult;
 
         var reward = config?.AchievementRewards.GetValueOrDefault(Achievement) ?? 150;
-        var bugsCount = tasks.Count(x => x.Type == TasksRepository.TaskType.Bug);
+        var achievementTasks = tasks.Where(x => x.Type == TasksRepository.TaskType.Bug).ToList();
+        var bugsCount = achievementTasks.Count();
         var achieved = bugsCount % 5 == 0;
 
-        return new AchievementResult(achieved, (ulong)reward);
+        return new AchievementResult(achieved, (ulong)reward, achievementTasks.Select(x => x.Id).ToArray());
     }
 }
