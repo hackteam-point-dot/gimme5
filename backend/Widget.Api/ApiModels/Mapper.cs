@@ -26,6 +26,9 @@ public static class Mapper
             Achievement.Sheeva => new UserAchievementApiModel((int)type,
                 "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/pngspixelart/sheeva.png",
                 "Выдается за 4 задачи одновременно в прогрессе.", level),
+            Achievement.EasterAgg => new UserAchievementApiModel((int)type,
+                "https://widget-back-ghh6fve6c7hxamfv.westeurope-01.azurewebsites.net/pngspixelart/egg.png",
+                "Молодец, нашёл!", level),
             _ => new UserAchievementApiModel((int)type, "", type.ToString(), level)
         };
     }
