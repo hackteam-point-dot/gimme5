@@ -1,0 +1,10 @@
+{
+  "name" : "gimme5",
+  "title" : "Gamification workflows",
+  "version" : "0.0.1",
+  "visual" : true,
+  "vendor" : {
+    "name" : "admin",
+    "email" : "rynaret@gmail.com"
+  }
+}
