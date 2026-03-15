@@ -62,6 +62,7 @@ builder.Services.AddTransient<ITarget, DeadlineHeroTarget>();
 builder.Services.AddTransient<ITarget, OnFireTarget>();
 builder.Services.AddTransient<ITarget, BugHunterTarget>();
 builder.Services.AddTransient<ITarget, NightOwlTarget>();
+builder.Services.AddTransient<ITarget, SheevaTarget>();
 
 var app = builder.Build();
 
