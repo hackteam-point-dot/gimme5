@@ -9,6 +9,7 @@ namespace Widget.Api.Application;
 public class AchievementService(
     TasksRepository tasksRepository,
     IEnumerable<ITarget> systemAchievements,
+    IEnumerable<ISecretTarget> secretAchievements,
     UserAchievementRepository userAchievementRepository,
     ProjectConfigurationRepository projectConfigurationRepository)
 {
@@ -29,7 +30,7 @@ public class AchievementService(
 
         foreach (var a in systemAchievements)
         {
-            var result = a.Achieve(action, config, tasks.Where(x => x.ResolverId == userId).ToList());
+            var result = a.IsAchieved(action, config, tasks.Where(x => x.ResolverId == userId).ToList());
 
             if (result.IsAchieved)
             {
@@ -42,5 +43,20 @@ public class AchievementService(
 
         return new AchievementResult(string.Join(", ", awardedAchievements), totalExp, taskIds.Distinct().ToArray(),
             awardedAchievements.ToArray());
+    }
+
+    public async Task<bool> CalculateLazyBastardAchievement(string userId, int score)
+    {
+        foreach (var achievement in secretAchievements)
+        {
+            var result = achievement.IsAchieved(userId, score);
+            if (result.IsAchieved)
+            {
+                await userAchievementRepository.CreateOrUpdateAsync(userId, achievement.Achievement);
+                return result.IsAchieved;
+            }
+        }
+
+        return false;
     }
 }

@@ -8,7 +8,7 @@ public class NightOwlTarget : ITarget
 {
     public Achievement Achievement => Achievement.NightOwl;
 
-    public AchievementResult Achieve(PostEventApiModel action, ProjectConfiguration? config,
+    public AchievementResult IsAchieved(PostEventApiModel action, ProjectConfiguration? config,
         IReadOnlyCollection<TasksRepository.TaskItem> tasks)
     {
         var isEnabled = config == null || !config.AchievementEnabled.ContainsKey(Achievement) ||

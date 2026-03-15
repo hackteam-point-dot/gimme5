@@ -6,6 +6,12 @@ namespace Widget.Api.Domain.Targets;
 
 public interface ITarget
 {
-    AchievementResult Achieve(PostEventApiModel action, ProjectConfiguration? config, IReadOnlyCollection<TasksRepository.TaskItem> tasks);
+    AchievementResult IsAchieved(PostEventApiModel action, ProjectConfiguration? config, IReadOnlyCollection<TasksRepository.TaskItem> tasks);
+    Achievement Achievement { get; }
+}
+
+public interface ISecretTarget
+{
+    AchievementResult IsAchieved(string userId, int score);
     Achievement Achievement { get; }
 }
