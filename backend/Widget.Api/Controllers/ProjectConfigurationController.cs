@@ -27,7 +27,8 @@ public class ProjectConfigurationController(ProjectConfigurationRepository repos
             config.BugResolveReward,
             config.IssueWeightFieldName,
             config.PriorityMultipliers,
-            config.AchievementRewards));
+            config.AchievementRewards,
+            config.AchievementEnabled));
     }
 
     [HttpPut]
