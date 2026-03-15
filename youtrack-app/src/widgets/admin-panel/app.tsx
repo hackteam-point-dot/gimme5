@@ -70,7 +70,6 @@ const AppComponent: React.FunctionComponent = () => {
     useEffect(() => {
         (async () => {
             const data = await fetchConfig();
-            console.log('Fetched config:', data);
             setConfig(data);
             setLoading(false);
         })();
@@ -92,9 +91,7 @@ const AppComponent: React.FunctionComponent = () => {
 
     const handleSave = async () => {
         setSaving(true);
-        console.log('Saving config:', config);
         const success = await saveConfig(config);
-        console.log('Config saved:', success);
         setSaving(false);
         host.alert(
             success ? 'Конфигурация успешно сохранена!' : 'Ошибка при сохранении конфигурации.',

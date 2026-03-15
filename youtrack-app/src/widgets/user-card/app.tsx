@@ -51,11 +51,27 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
             userId={YTApp.entity?.login} 
             onClose={() => setEasterEggRevealed(false)}
             onScoreSubmit={async (score) => {
-                const userLogin = YTApp.entity?.login;
-                if (!userLogin) {
-                    return null;
-                }
-                await saveEasterEggScore(userLogin, score);
+
+              console.log(`onScoreSubmit 1`);
+              const userLogin = YTApp.entity?.login;
+              console.log(`onScoreSubmit 2`);
+              if (!userLogin) {
+                  return null;
+              }
+              console.log(`onScoreSubmit 3`);
+              try {
+                  console.log(`Submitting score for user ${userLogin}: ${score}`);
+                  const response = await host.fetchApp('backend/easter-egg', {
+                      body: {
+                          userId: userLogin,
+                          score: score
+                      },
+                  });
+                  console.log(`Response: ${JSON.stringify(response)}`);
+                  return true;
+              } catch {
+                  return false;
+              }
             }}
           />
             ) : (
@@ -97,22 +113,6 @@ const UserCard: React.FunctionComponent<UserCardProps> = ({data}) => {
       </div>
     );
 };
-
-async function saveEasterEggScore(userId: string, score: number): Promise<boolean> {
-    try {
-        console.log(`Submitting score for user ${userId}: ${score}`);
-        const response = await host.fetchApp('backend/easter-egg', {
-            body: {
-                userId: userId,
-                score: score
-            },
-        });
-        console.log(`Response: ${JSON.stringify(response)}`);
-        return true;
-    } catch {
-        return false;
-    }
-}
 
 const AppComponent: React.FunctionComponent = () => {
     const [data, setData] = useState<UserCardData | null>(null);
